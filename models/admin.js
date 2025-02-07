@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 
 const adminSchema = new mongoose.Schema(
   {
@@ -6,6 +6,10 @@ const adminSchema = new mongoose.Schema(
       type: Number,
       required: true,
       unique: true,
+    },
+    turfName: {
+      type: String,
+      required: true,
     },
     role: {
       type: String,
@@ -56,4 +60,4 @@ const adminSchema = new mongoose.Schema(
 );
 
 const Admin = mongoose.model("Admin", adminSchema);
-export default Admin;
+module.exports = Admin;

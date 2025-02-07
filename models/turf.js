@@ -1,6 +1,6 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 
-const userSchema = new mongoose.Schema(
+const turfSchema = new mongoose.Schema(
   {
     name: {
       type: String,
@@ -65,5 +65,5 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const User = mongoose.model("User", userSchema);
-export default User;
+const Turf = mongoose.model("User", turfSchema);
+module.exports = Turf;
