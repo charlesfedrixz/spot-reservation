@@ -4,6 +4,7 @@ const cors = require("cors");
 const adminRoute = require("./Routes/adminRoute.js");
 const { errorHandler } = require("./middleware/errorHandler.js");
 const connectDB = require("./config/db.js");
+const userRoute = require("./Routes/userRoute.js");
 
 // Load environment variables
 dotenv.config();
@@ -18,6 +19,7 @@ app.use(cors());
 connectDB();
 //proctected route
 app.use("/api/admin", adminRoute);
+app.use("/api/user", userRoute);
 //root route
 app.get("/", (req, res) => {
   return res.send("Server is running");

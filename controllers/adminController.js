@@ -52,4 +52,42 @@ const getUser = asyncHandler(async (req, res) => {
   return successResponse(res, 200, admin, "List Admin successfully");
 });
 
-module.exports = { createAdmin, login, getUser };
+const deleteUser = asyncHandler(async (req, res) => {
+  const email = req.body;
+  if (!email) return errorResponse(res, 400, "Please provide email.");
+
+  const findUser = await Admin.findOneAndDelete(email);
+  if (!findUser) return errorResponse(res, 404, "No User Found.");
+
+  return successResponse(res, 200, "User Deleted successfully.");
+});
+
+const updateUser = asyncHandler(async (req, res) => {
+  const { number, role, email, turfName } = req.body;
+  if (!number || !role || !email || !password || !turfName)
+    return errorResponse(res, 400, "Please provide all data!");
+
+  const updatedUser = await Admin.findOne({ email });
+  if (!updatedUser) return errorResponse(res, 404, "User not found.");
+
+  if (
+    updatedUser.number === number &&
+    updatedUser.role === role &&
+    updatedUser.email === email &&
+    updatedUser.turfName === turfName
+  )
+    return successResponse(
+      res,
+      200,
+      "No changes detected. User data remains the same."
+    );
+
+  const updated = await Admin.findOneAndUpdate(
+    { email },
+    { number, role, turfName },
+    { new: true, runValidators: true }
+  );
+  return successResponse(res, 200, "User updated successfully");
+});
+
+module.exports = { createAdmin, login, getUser, deleteUser, updateUser };
