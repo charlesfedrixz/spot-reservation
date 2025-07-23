@@ -82,7 +82,7 @@ export const login = asyncHandler(async (req, res) => {
     await findUser.save();
     await sendEmail(email, "Your OTP Code", `Your OTP is: ${otp}`);
 
-    return successResponse(res, 200, findUser, "Login successfully");
+    return successResponse(res, 200, findUser.email, "Login successfully");
   } catch (error) {
     console.error("Login error:", error);
     return errorResponse(res, 500, "Login failed due to server error.");
@@ -114,7 +114,6 @@ export const logout = asyncHandler(async (req, res) => {
 export const verifyOtp = asyncHandler(async (req, res) => {
   try {
     const { email, otp } = req.body;
-
     const adminUser = await Admin.findOne({ email });
     if (!adminUser || !adminUser.otp)
       return errorResponse(res, 400, "Invalid OTP");
@@ -131,8 +130,8 @@ export const verifyOtp = asyncHandler(async (req, res) => {
     await adminUser.save();
     const token = jwt.sign(
       {
-        adminId: findUser._id,
-        turfId: findUser.turf,
+        adminId: adminUser._id,
+        turfId: adminUser.turf,
       },
       process.env.JWT_SECRET,
       { expiresIn: process.env.JWT_EXPIRY }
@@ -144,7 +143,13 @@ export const verifyOtp = asyncHandler(async (req, res) => {
       sameSite: "none",
       maxAge: 1 * 24 * 60 * 60 * 1000, // 1 days
     });
-    return successResponse(res, 200, null, "OTP verified successfully");
+
+    return successResponse(
+      res,
+      200,
+      { email: adminUser.email, role: adminUser.role, turf: adminUser.turf },
+      "OTP verified successfully"
+    );
   } catch (error) {
     console.error("verify otp error:", error);
     return errorResponse(res, 500, "OTP verify failed due to server error.");

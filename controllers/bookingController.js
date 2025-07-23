@@ -93,3 +93,44 @@ export const deleteBooking = asyncHandler(async (req, res) => {
     return errorResponse(res, 500, "Failed to delete due to server error!");
   }
 });
+
+export const updateBooking = asyncHandler(async (req, res) => {
+  if (req.admin.role !== "Super_Admin" && req.admin.role !== "Turf_Admin")
+    return errorResponse(res, 403, "Unauthorized to update data!");
+
+  try {
+    const { bookingId } = req.params;
+    if (!bookingId) return errorResponse(res, 400, "Booking ID is required!");
+
+    const { date, slot, side, paymentStatus, bookingType } = req.body;
+
+    const updateData = {};
+    if (date) updateData.date = date;
+    if (slot) updateData.slot = slot;
+    if (side) updateData.side = side;
+    if (paymentStatus) updateData.paymentStatus = paymentStatus;
+    if (bookingType) updateData.bookingType = bookingType;
+
+    const updatedBooking = await Booking.findByIdAndUpdate(
+      bookingId,
+      { $set: updateData },
+      { new: true } // return the updated document
+    );
+
+    if (!updatedBooking) return errorResponse(res, 404, "Booking not found!");
+
+    return successResponse(
+      res,
+      200,
+      updatedBooking,
+      "Booking updated successfully!"
+    );
+  } catch (error) {
+    console.error("Failed to update booking!:", error);
+    return errorResponse(
+      res,
+      500,
+      "Failed to update Booking due to server error!"
+    );
+  }
+});
