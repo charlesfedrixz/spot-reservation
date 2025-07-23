@@ -1,33 +1,52 @@
-const express = require("express");
-const dotenv = require("dotenv");
-const cors = require("cors");
-const adminRoute = require("./Routes/adminRoute.js");
-const { errorHandler } = require("./middleware/errorHandler.js");
-const connectDB = require("./config/db.js");
-const userRoute = require("./Routes/userRoute.js");
+import dotenv from "dotenv";
+import express from "express";
+import cors from "cors";
+import cookieParser from "cookie-parser";
+import connectDB from "./config/db.js";
+import adminRoute from "./Routes/adminRoute.js";
+import userRoute from "./Routes/userRoute.js";
+import { errorHandler } from "./middleware/errorHandler.js";
+import turfRoutes from "./Routes/turfRoute.js";
+import { fileURLToPath } from "url";
+import { dirname } from "path";
 
-// Load environment variables
 dotenv.config();
+
 // Initialize Express app
 const app = express();
-//middleware
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cors());
 
-//databse connection
+// middleware
+app.use(express.json());
+app.use(cookieParser());
+app.use(express.urlencoded({ extended: false }));
+
+// Enable CORS
+app.use(
+  cors({
+    origin: process.env.CLIENT_URL || "http://localhost:5173",
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
+
+// database connection
 connectDB();
-//proctected route
+
+// protected routes
 app.use("/api/admin", adminRoute);
 app.use("/api/user", userRoute);
-//root route
+app.use("/api/turf", turfRoutes);
+
+// root route
 app.get("/", (req, res) => {
-  return res.send("Server is running");
+  return res.send("Spot reservation server is running...");
 });
-//to handle error
+
+// error handler
 app.use(errorHandler);
 
-//server listening
+// Start server
 const port = process.env.PORT || 9090;
 app.listen(port, () => {
   console.log(

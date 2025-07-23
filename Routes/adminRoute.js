@@ -1,17 +1,24 @@
-const express = require("express");
-const adminRoute = express.Router();
-const {
+import express from "express";
+import {
   createAdmin,
   login,
   getUser,
   deleteUser,
   updateUser,
-} = require("../controllers/adminController.js");
+  logout,
+  verifyOtp,
+  sendOtp,
+} from "../controllers/adminController.js";
+import isAdmin from "../middleware/adminAuth.js";
 
+const adminRoute = express.Router();
 adminRoute.post("/create", createAdmin);
 adminRoute.post("/login", login);
-adminRoute.post("/adminList", getUser);
+adminRoute.post("/sendOTP", sendOtp);
+adminRoute.post("/verifyOTP", verifyOtp);
+adminRoute.post("/logout", isAdmin, logout);
+adminRoute.get("/adminList", getUser);
 adminRoute.post("/deleteAdmin", deleteUser);
 adminRoute.post("/updateAdmin", updateUser);
 
-module.exports = adminRoute;
+export default adminRoute;
