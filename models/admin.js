@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const adminSchema = new mongoose.Schema(
   {
@@ -6,10 +6,17 @@ const adminSchema = new mongoose.Schema(
       type: Number,
       required: true,
       unique: true,
+      trim: true,
+      validate: {
+        validator: (v) => /^[6-9]\d{9}$/.test(v),
+        message: (props) =>
+          `${props.value} is not a valid 10-digit Indian mobile number.`,
+      },
     },
-    turfName: {
-      type: String,
-      required: true,
+    turf: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Turf",
+      //required: true,
     },
     role: {
       type: String,
@@ -32,7 +39,8 @@ const adminSchema = new mongoose.Schema(
     password: {
       type: String,
       required: true,
-      minilength: [6, "minimum password length is 6...."],
+      trim: true,
+      minlength: [6, "minimum password length is 6...."],
     },
     permissions: {
       type: [
@@ -43,6 +51,10 @@ const adminSchema = new mongoose.Schema(
         },
       ],
       default: [],
+    },
+    active: {
+      type: Boolean,
+      default: false,
     },
     otp: {
       type: String,
@@ -60,4 +72,4 @@ const adminSchema = new mongoose.Schema(
 );
 
 const Admin = mongoose.model("Admin", adminSchema);
-module.exports = Admin;
+export default Admin;

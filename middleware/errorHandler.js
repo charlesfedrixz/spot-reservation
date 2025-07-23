@@ -9,7 +9,11 @@ const errorHandler = (err, req, res, next) => {
   });
 };
 
-const errorResponse = (res, statusCode, message) => {
+const errorResponse = (
+  res,
+  statusCode = 500,
+  message = "Something went wrong"
+) => {
   res.status(statusCode).json({
     success: false,
     status: statusCode,
@@ -17,13 +21,12 @@ const errorResponse = (res, statusCode, message) => {
   });
 };
 
-const successResponse = (res, statusCode, data, message) => {
+const successResponse = (res, statusCode = 200, data = null, message = "") => {
   res.status(statusCode).json({
     success: true,
     status: statusCode,
-    data,
     message,
+    data,
   });
 };
-
-module.exports = { errorHandler, successResponse, errorResponse };
+export { errorHandler, successResponse, errorResponse };

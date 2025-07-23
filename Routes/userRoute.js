@@ -1,17 +1,21 @@
-const express = require("express");
-const {
+import express from "express";
+import {
   userRegister,
   userLogin,
   userDelete,
   userEdit,
   userList,
-} = require("../controllers/userController");
+  userLogout,
+} from "../controllers/userController.js";
+import isUser from "../middleware/userAuth.js";
 
 const userRoute = express.Router();
+
 userRoute.post("/register", userRegister);
 userRoute.post("/login", userLogin);
-userRoute.delete("/delete", userDelete);
-userRoute.put("/edit", userEdit);
-userRoute.get("/userList", userList);
+userRoute.post("/logout", isUser, userLogout);
+userRoute.delete("/delete/:userId", isUser, userDelete);
+userRoute.put("/edit/:userId", isUser, userEdit);
+userRoute.get("/userList", isUser, userList);
 
-module.exports = userRoute;
+export default userRoute;
