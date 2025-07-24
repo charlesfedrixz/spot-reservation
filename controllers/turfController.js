@@ -50,18 +50,8 @@ const storage = new CloudinaryStorage({
 const upload = multer({ storage });
 
 export const createTurf = asyncHandler(async (req, res) => {
-  const {
-    name,
-    description,
-    location,
-    side,
-    washroom,
-    changingRoom,
-    shop,
-    parking,
-    timing,
-    prices,
-  } = req.body;
+  const { name, description, location, side, aminities, timing, prices } =
+    req.body;
 
   // Validate required fields
   if (!name || !description || !location || !timing || !prices || !side) {
@@ -126,10 +116,7 @@ export const createTurf = asyncHandler(async (req, res) => {
       timing: parsedTiming,
       prices: parsedPrices,
       side,
-      washroom,
-      changingRoom,
-      shop,
-      parking,
+      aminities,
       image: uploadImages,
     });
 

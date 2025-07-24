@@ -38,18 +38,7 @@ const turfSchema = new mongoose.Schema(
       required: true,
       enum: [5, 6, 7, 8, 9, 10, 11],
     },
-    washroom: {
-      type: Boolean,
-      default: false,
-    },
-    changingRoom: {
-      type: Boolean,
-      default: false,
-    },
-    shop: {
-      type: Boolean,
-      default: false,
-    },
+
     timing: {
       start: {
         type: String,
@@ -77,9 +66,23 @@ const turfSchema = new mongoose.Schema(
         description: { type: String, default: "Event None" },
       },
     },
-    parking: {
-      type: Boolean,
-      default: false,
+    aminities: {
+      parking: {
+        type: Boolean,
+        default: false,
+      },
+      washroom: {
+        type: Boolean,
+        default: false,
+      },
+      changingRoom: {
+        type: Boolean,
+        default: false,
+      },
+      shop: {
+        type: Boolean,
+        default: false,
+      },
     },
   },
   { timestamps: true }
