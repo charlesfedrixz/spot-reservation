@@ -2,12 +2,13 @@ import { handleAdminLogout } from "@/dashboard/api/apiServices";
 import { useMutation } from "@tanstack/react-query";
 import { Bell, Menu } from "lucide-react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 export default function Header({ activeTab, userRole, setSidebarOpen }) {
   const userInfo = JSON.parse(localStorage.getItem("userInfo"));
   const [dropdownOpen, setDropdownOpen] = useState(false);
-
+  const navigate = useNavigate();
   const handleDropdownToggle = () => {
     setDropdownOpen((prev) => !prev);
   };
@@ -20,7 +21,7 @@ export default function Header({ activeTab, userRole, setSidebarOpen }) {
     onSuccess: () => {
       localStorage.removeItem("userInfo");
       localStorage.removeItem("email");
-      window.location.href = "auth/login"; // Redirect to login page
+      navigate("auth/login");
     },
     onError: (error) => {
       console.error("Logout failed:", error);

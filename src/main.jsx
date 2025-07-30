@@ -11,9 +11,7 @@ import LoginAuthenticated from "./dashboard/pages/login/LoginAuthenticated";
 import LoginDashboard from "./dashboard/pages/login/LoginDashboard";
 import TurfCreateForm from "./dashboard/pages/turfs/TurfCreateForm";
 import TurfManagement from "./dashboard/pages/turfs/TurfManagement";
-import LoginForm from "./features/auth/LoginForm";
 import LoginLayout from "./features/auth/LoginLayout";
-import RegisterForm from "./features/auth/RegisterForm";
 import "./index.css";
 import DashboardLayout from "./layouts/main/DashboardLayout";
 import MainLayout from "./layouts/main/MainLayout";
@@ -25,8 +23,8 @@ const queryClient = new QueryClient();
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route>
-      <Route path="/login" element={<LoginForm />} />
-      <Route path="/register" element={<RegisterForm />} />
+      {/* Public Routes */}
+      <Route element={<MainLayout />}></Route>
       <Route element={<MainLayout />}>
         <Route path="/" element={<FootballTurfLanding />} />
         <Route path="/about" element={<About />} />

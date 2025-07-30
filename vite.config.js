@@ -1,7 +1,7 @@
 import react from "@vitejs/plugin-react";
+import fs from "fs";
 import path from "path";
 import { defineConfig } from "vite";
-
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
@@ -11,16 +11,12 @@ export default defineConfig({
     },
   },
   server: {
-    proxy: {
-      "/api": {
-        target: "https://d129b0a6fab9.ngrok-free.app",
-        changeOrigin: true,
-        secure: true,
-        headers: {
-          "ngrok-skip-browser-warning": "true",
-        },
-      },
+    https: {
+      key: fs.readFileSync("./cert/key.pem"),
+      cert: fs.readFileSync("./cert/cert.pem"),
     },
+    port: 3000,
+    host: "localhost",
   },
   // server: {
   //   https: {

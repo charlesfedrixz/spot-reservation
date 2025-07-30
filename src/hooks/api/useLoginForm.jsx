@@ -10,6 +10,7 @@ export default function useLoginForm({ data }, config = {}) {
     onError: (error) => {
       console.error("Login failed:", error);
     },
+
     ...config,
   });
   return { mutate, isPending, isError, error };

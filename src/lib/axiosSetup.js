@@ -5,8 +5,10 @@ export const baseUrl =
 // console.log(baseUrl);
 export const Axios = axios.create({
   baseURL: baseUrl,
-  // headers: {
-  //   "ngrok-skip-browser-warning": "true",
-  // },
+
+  headers: {
+    "ngrok-skip-browser-warning": "true",
+    Accept: "application/json",
+  },
   withCredentials: true,
 });
