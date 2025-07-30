@@ -39,7 +39,7 @@ const Footer = () => {
       </div>
     </div>
     <div className="max-w-6xl mx-auto mt-12 pt-6 border-t border-gray-800 text-center text-gray-400">
-      <p>&copy; {new Date().getFullYear()} <SearchMyPlay></SearchMyPlay>. All rights reserved.</p>
+      <p>&copy; {new Date().getFullYear()} SearchMyPlay. All rights reserved.</p>
     </div>
   </footer>
   );
