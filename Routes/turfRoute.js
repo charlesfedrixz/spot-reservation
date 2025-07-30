@@ -1,6 +1,7 @@
 import express from "express";
 import multer from "multer";
-import { createTurf } from "../controllers/turfController.js";
+import { createTurf, turfList } from "../controllers/turfController.js";
+import isAdmin from "../middleware/adminAuth.js";
 
 const storage = multer.memoryStorage();
 const upload = multer({
@@ -12,6 +13,7 @@ const upload = multer({
 const turfRoutes = express.Router();
 
 // Simplified route with upload middleware and controller
-turfRoutes.post("/create", upload.array("image", 5), createTurf);
+turfRoutes.post("/create", isAdmin, upload.array("image", 5), createTurf);
+turfRoutes.get("/getTurf", isAdmin, turfList);
 
 export default turfRoutes;

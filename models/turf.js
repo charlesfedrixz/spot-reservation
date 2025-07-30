@@ -2,6 +2,11 @@ import mongoose from "mongoose";
 
 const turfSchema = new mongoose.Schema(
   {
+    admin: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Admin",
+      required: true,
+    },
     name: {
       type: String,
       required: true,

@@ -6,7 +6,8 @@ import { PassThrough } from "stream";
 import { CloudinaryStorage } from "multer-storage-cloudinary";
 import Turf from "../models/turf.js";
 import { errorResponse, successResponse } from "../middleware/errorHandler.js";
-
+import dotenv from "dotenv";
+dotenv.config();
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
@@ -27,7 +28,9 @@ const uploadToCloudinary = async (fileBuffer) => {
         if (error) {
           console.error("Cloudinary Upload Error:", err);
           reject(error);
-        } else resolve(result.secure_url);
+        } else {
+          resolve(result.secure_url);
+        }
       }
     );
     bufferStream.pipe(streamUpload);
@@ -47,11 +50,15 @@ const storage = new CloudinaryStorage({
     ],
   },
 });
-const upload = multer({ storage });
+export const upload = multer({ storage });
 
 export const createTurf = asyncHandler(async (req, res) => {
+  if (req.admin.role !== "Super_Admin" && req.admin.role !== "Turf_Admin")
+    return errorResponse(res, 403, "Unauthorized to create Turf!");
   const { name, description, location, side, aminities, timing, prices } =
     req.body;
+
+  const admin = req.admin._id;
 
   // Validate required fields
   if (!name || !description || !location || !timing || !prices || !side) {
@@ -95,6 +102,7 @@ export const createTurf = asyncHandler(async (req, res) => {
     return errorResponse(res, 400, `Invalid JSON format: ${err.message}`);
   }
 
+  console.log("image: ", req.files);
   const uploadImages = [];
   for (const file of req.files) {
     try {
@@ -106,10 +114,12 @@ export const createTurf = asyncHandler(async (req, res) => {
       uploadImages.push(uploadResult);
     } catch (error) {
       console.error("Image upload failed:", error);
+      return errorResponse(res, 500, "Image upload failed. Turf not created.");
     }
   }
   try {
     const turf = new Turf({
+      admin,
       name,
       description,
       location: parsedLocation,
@@ -149,6 +159,8 @@ export const deleteTurf = asyncHandler(async (req, res) => {
 });
 
 export const turfList = asyncHandler(async (req, res) => {
+  if (req.admin.role !== "Super_Admin")
+    return errorResponse(res, 403, "Unauthorized to fetch Turf list!");
   try {
     const turfList = await Turf.find();
     if (!turfList || turfList == 0)

@@ -1,6 +1,8 @@
 import jwt from "jsonwebtoken";
+import Admin from "../models/admin.js";
+import asyncHandler from "express-async-handler";
 
-const isAdmin = (req, res, next) => {
+const isAdmin = asyncHandler(async (req, res, next) => {
   const token = req.cookies.jwt;
 
   if (!token) {
@@ -9,12 +11,17 @@ const isAdmin = (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.admin = decoded; // Add admin data to request object
+    const admin = await Admin.findById(decoded.adminId).select("-password");
+    if (!admin) {
+      return res.status(401).json({ message: "Unauthorized: Admin not found" });
+    }
+
+    req.admin = admin;
     next();
   } catch (error) {
     console.log("Invaid token : ", error);
     return res.status(401).json({ message: "Unauthorized: Invalid token" });
   }
-};
+});
 
 export default isAdmin;

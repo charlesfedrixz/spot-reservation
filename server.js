@@ -1,4 +1,7 @@
 import dotenv from "dotenv";
+dotenv.config();
+import https from "https";
+import fs from "fs";
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
@@ -7,10 +10,12 @@ import adminRoute from "./Routes/adminRoute.js";
 import userRoute from "./Routes/userRoute.js";
 import { errorHandler } from "./middleware/errorHandler.js";
 import turfRoutes from "./Routes/turfRoute.js";
-import { fileURLToPath } from "url";
-import { dirname } from "path";
 
-dotenv.config();
+//load credentials
+const sslOptions = {
+  key: fs.readFileSync("./cred/key.pem"),
+  cert: fs.readFileSync("./cred/cert.pem"),
+};
 
 // Initialize Express app
 const app = express();
@@ -23,10 +28,14 @@ app.use(express.urlencoded({ extended: false }));
 // Enable CORS
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || "http://localhost:5173",
+    origin: ["https://d6edd98dfc1f.ngrok-free.app", "https://localhost:3000"], // Your frontend URLs
     credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    allowedHeaders: ["Content-Type", "Authorization"],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: [
+      "Content-Type",
+      "Authorization",
+      "ngrok-skip-browser-warning",
+    ],
   })
 );
 
@@ -48,8 +57,11 @@ app.use(errorHandler);
 
 // Start server
 const port = process.env.PORT || 9090;
-app.listen(port, () => {
-  console.log(
-    `Server of your spot-reservation is running on http://localhost:${port}`
-  );
+// app.listen(port, () => {
+//   console.log(
+//     `Server of your spot-reservation is running on http://localhost:${port}`
+//   );
+// });
+https.createServer(sslOptions, app).listen(port, () => {
+  console.log(`Server is running on https://localhost:${port}`);
 });

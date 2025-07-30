@@ -10,14 +10,27 @@ import sendEmail from "../utils/sendEmail.js";
 export const createAdmin = asyncHandler(async (req, res) => {
   try {
     const { number, role, email, password, turf } = req.body;
-    if (!number || !role || !email || !password || !turf)
-      return errorResponse(res, 400, "Please provide all data!");
+    if (!number || !role || !email || !password)
+      return errorResponse(res, 400, "Please provide all required data!");
 
-    if (!mongoose.Types.ObjectId.isValid(turf)) {
-      return errorResponse(res, 400, "Please provide a validId!");
+    if (role === "Super_Admin" && turf) {
+      return errorResponse(
+        res,
+        400,
+        "Super Admin cannot be associated with a turf!"
+      );
     }
+
+    if (role !== "Super_Admin" && !turf) {
+      return errorResponse(res, 400, "Turf ID is required for Turf Admin!");
+    }
+
+    if (turf && !mongoose.Types.ObjectId.isValid(turf)) {
+      return errorResponse(res, 400, "Please provide a valid turf ID!");
+    }
+
     if (await Admin.findOne({ email }))
-      return errorResponse(res, 401, null, "User is already created!");
+      return errorResponse(res, 401, null, "User already exists!");
 
     const hashPassword = await bcrypt.hash(password, 10);
     const newUser = await Admin.create({
@@ -25,8 +38,9 @@ export const createAdmin = asyncHandler(async (req, res) => {
       role,
       email,
       password: hashPassword,
-      turf,
+      ...(role !== "Super_Admin" && { turf }),
     });
+
     return successResponse(
       res,
       201,
@@ -80,7 +94,17 @@ export const login = asyncHandler(async (req, res) => {
     findUser.otp = otp;
     findUser.otpExpire = Date.now() + 5 * 60 * 1000;
     await findUser.save();
-    await sendEmail(email, "Your OTP Code", `Your OTP is: ${otp}`);
+
+    try {
+      await sendEmail(email, otp);
+    } catch (emailError) {
+      console.error("Failed to send OTP:", emailError);
+      // Rollback the OTP changes
+      findUser.otp = null;
+      findUser.otpExpire = null;
+      await findUser.save();
+      return errorResponse(res, 500, "Failed to send OTP email");
+    }
 
     return successResponse(res, 200, findUser.email, "Login successfully");
   } catch (error) {
@@ -91,7 +115,7 @@ export const login = asyncHandler(async (req, res) => {
 
 export const logout = asyncHandler(async (req, res) => {
   try {
-    const adminId = req.admin.adminId;
+    const adminId = req.admin._id;
     if (!adminId) {
       return errorResponse(res, 400, "No active  session found");
     }
@@ -140,8 +164,9 @@ export const verifyOtp = asyncHandler(async (req, res) => {
     res.cookie("jwt", token, {
       httpOnly: true,
       secure: true,
-      sameSite: "none",
-      maxAge: 1 * 24 * 60 * 60 * 1000, // 1 days
+      sameSite: "None",
+      maxAge: 30 * 24 * 60 * 60 * 1000,
+      path: "/",
     });
 
     return successResponse(
@@ -175,7 +200,7 @@ export const deleteUser = asyncHandler(async (req, res) => {
     return errorResponse(res, 403, "Delete user by Super Admin only!");
   try {
     const id = req.params;
-    if (!id) return errorResponse(res, 400, "Please provide email.");
+    if (!id) return errorResponse(res, 400, "Please provide id.");
 
     const findUser = await Admin.findByIdAndDelete(id);
     if (!findUser) return errorResponse(res, 404, "No User Found.");
