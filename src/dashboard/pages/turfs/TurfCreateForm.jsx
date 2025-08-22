@@ -18,13 +18,14 @@ export default function TurfCreateForm() {
     name: "",
     description: "",
     location: {
-      address: "",
-      mapLink: "",
+      address1: "",
+      address2: "",
+      googleMapLink: "",
     },
     playerSide: "",
     timing: {
-      start: "",
-      end: "",
+      startTime: "",
+      endTime: "",
     },
     pricing: {
       hourly: {
@@ -36,7 +37,7 @@ export default function TurfCreateForm() {
         description: "",
       },
     },
-    image: [],
+    images: [],
     amenities: {
       washroom: false,
       changingRoom: false,
@@ -125,8 +126,8 @@ export default function TurfCreateForm() {
 
   const handleImageUpload = (e) => {
     const files = Array.from(e.target.files);
-    const newImages = files.map((file, index) => ({
-      id: Date.now() + index, // Use index instead of random to ensure uniqueness
+    const newImages = files.map((file) => ({
+      id: Date.now() + Math.random(),
       file,
       url: URL.createObjectURL(file),
       name: file.name,
@@ -135,25 +136,12 @@ export default function TurfCreateForm() {
     setImagePreview((prev) => [...prev, ...newImages]);
     setFormData((prev) => ({
       ...prev,
-      image: [...prev.image, ...files],
+      images: [...prev.images, ...files],
     }));
   };
 
-  // Fixed removeImage function to sync both preview and formData
   const removeImage = (imageId) => {
-    // Find the index of the image to remove
-    const imageIndex = imagePreview.findIndex((img) => img.id === imageId);
-
-    if (imageIndex !== -1) {
-      // Remove from preview
-      setImagePreview((prev) => prev.filter((img) => img.id !== imageId));
-
-      // Remove from formData.image array at the same index
-      setFormData((prev) => ({
-        ...prev,
-        image: prev.image.filter((_, index) => index !== imageIndex),
-      }));
-    }
+    setImagePreview((prev) => prev.filter((img) => img.id !== imageId));
   };
 
   const validateCurrentStep = () => {
@@ -163,12 +151,12 @@ export default function TurfCreateForm() {
           formData.name.trim() !== "" && formData.description.trim() !== ""
         );
       case 1:
-        return formData.location.address.trim() !== "";
+        return formData.location.address1.trim() !== "";
       case 2:
         return (
           formData.playerSide !== "" &&
-          formData.timing.start !== "" &&
-          formData.timing.end !== ""
+          formData.timing.startTime !== "" &&
+          formData.timing.endTime !== ""
         );
       case 3:
         return (
@@ -194,48 +182,44 @@ export default function TurfCreateForm() {
       setCurrentStep(currentStep - 1);
     }
   };
-
-  const { mutate, isPending, isError, error } = useTurfCreate({});
+  const { mutate, isPending, isError, error } = useTurfCreate();
+  const transformFormData = (data) => {
+    return {
+      name: data.name,
+      description: data.description,
+      location: {
+        address: data.location.address1,
+        mapLink: data.location.googleMapLink,
+      },
+      side: parseInt(data.playerSide),
+      timing: {
+        start: data.timing.startTime,
+        end: data.timing.endTime,
+      },
+      prices: {
+        hourly: {
+          hour: data.pricing.hourly.hour,
+          price: parseInt(data.pricing.hourly.price),
+        },
+        event: {
+          price: parseInt(data.pricing.event.price),
+          description: data.pricing.event.description,
+        },
+      },
+      aminities: {
+        ...data.amenities,
+      },
+      image: data.images, // should be image URLs (e.g., from Cloudinary)
+    };
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    const form = new FormData();
-
-    // Basic form data
-    form.append("name", formData.name);
-    form.append("description", formData.description);
-
-    // Location data as JSON string
-    form.append("location", JSON.stringify(formData.location));
-
-    // Game data
-    form.append("side", formData.playerSide);
-
-    // Timing data as JSON string
-    form.append("timing", JSON.stringify(formData.timing));
-
-    // Pricing data as JSON string
-    form.append("prices", JSON.stringify(formData.pricing));
-
-    // Amenities as JSON string
-    // Check if amenities exist before stringifying
-    if (formData.amenities) {
-      form.append("amenities", JSON.stringify(formData.amenities));
-    }
-
-    // Append images (files)
-    formData.image.forEach((file) => {
-      form.append("image", file);
-    });
-
-    // Debug log to check FormData contents
-    console.log("FormData contents:");
-    for (let [key, value] of form.entries()) {
-      console.log(key, value);
-    }
-
-    mutate(form);
+    console.log("Form submitted:", formData);
+    const transformedData = transformFormData(formData);
+    // Wrap the transformed data in an array to match the "data": [ ... ] structure
+    mutate({ data: [transformedData] });
+    // alert("Turf created successfully!");
   };
 
   const getStepColor = (color) => {
@@ -293,17 +277,32 @@ export default function TurfCreateForm() {
             <div className="grid md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Address *
+                  Primary Address *
                 </label>
                 <input
                   type="text"
-                  value={formData.location.address}
+                  value={formData.location.address1}
                   onChange={(e) =>
-                    handleInputChange("location.address", e.target.value)
+                    handleInputChange("location.address1", e.target.value)
                   }
                   className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                   placeholder="Street, City, State"
                   required
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Secondary Address
+                </label>
+                <input
+                  type="text"
+                  value={formData.location.address2}
+                  onChange={(e) =>
+                    handleInputChange("location.address2", e.target.value)
+                  }
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                  placeholder="Landmark, Area"
                 />
               </div>
             </div>
@@ -314,9 +313,9 @@ export default function TurfCreateForm() {
               </label>
               <input
                 type="url"
-                value={formData.location.mapLink}
+                value={formData.location.googleMapLink}
                 onChange={(e) =>
-                  handleInputChange("location.mapLink", e.target.value)
+                  handleInputChange("location.googleMapLink", e.target.value)
                 }
                 className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                 placeholder="https://maps.google.com/..."
@@ -355,9 +354,9 @@ export default function TurfCreateForm() {
                 </label>
                 <input
                   type="time"
-                  value={formData.timing.start}
+                  value={formData.timing.startTime}
                   onChange={(e) =>
-                    handleInputChange("timing.start", e.target.value)
+                    handleInputChange("timing.startTime", e.target.value)
                   }
                   className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
                   required
@@ -370,9 +369,9 @@ export default function TurfCreateForm() {
                 </label>
                 <input
                   type="time"
-                  value={formData.timing.end}
+                  value={formData.timing.endTime}
                   onChange={(e) =>
-                    handleInputChange("timing.end", e.target.value)
+                    handleInputChange("timing.endTime", e.target.value)
                   }
                   className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
                   required
@@ -385,6 +384,7 @@ export default function TurfCreateForm() {
       case 3:
         return (
           <div className="space-y-8">
+            {/* Hourly Pricing */}
             <div>
               <h3 className="text-lg font-semibold text-gray-700 mb-4 border-b border-gray-200 pb-2">
                 Hourly Booking
@@ -433,6 +433,7 @@ export default function TurfCreateForm() {
               </div>
             </div>
 
+            {/* Event Pricing */}
             <div>
               <h3 className="text-lg font-semibold text-gray-700 mb-4 border-b border-gray-200 pb-2">
                 Event Booking
@@ -651,11 +652,10 @@ export default function TurfCreateForm() {
             {currentStep === steps.length - 1 ? (
               <button
                 type="button"
-                disabled={isPending}
                 onClick={handleSubmit}
                 className="flex items-center px-8 py-3 bg-gradient-to-r from-green-600 to-blue-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
               >
-                {isPending ? "Creating..." : "Create Turf"}
+                Create Turf
                 <Check className="w-4 h-4 ml-2" />
               </button>
             ) : (

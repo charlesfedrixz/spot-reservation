@@ -37,13 +37,3 @@ export const handleCreateTurf = async (data) => {
     throw error;
   }
 };
-
-export const handleGetAllTurfsList = async () => {
-  try {
-    const response = await Axios.get("api/turf/getTurf");
-    return response?.data;
-  } catch (error) {
-    console.error("Error fetching turfs:", error);
-    throw error;
-  }
-};
