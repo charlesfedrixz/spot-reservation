@@ -7,43 +7,57 @@ import {
   Route,
 } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
+import BlockedSlots from "./dashboard/pages/bookings-management/BlockedSlots";
+import BookingManagement from "./dashboard/pages/bookings-management/BookingManagement";
+import CustomerManagement from "./dashboard/pages/customers-management/CustomerManagement";
 import LoginAuthenticated from "./dashboard/pages/login/LoginAuthenticated";
 import LoginDashboard from "./dashboard/pages/login/LoginDashboard";
-import TurfCreateForm from "./dashboard/pages/turfs/TurfCreateForm";
-import TurfManagement from "./dashboard/pages/turfs/TurfManagement";
+import Dashboard from "./dashboard/pages/overview/Dashboard";
+import TurfCreateForm from "./dashboard/pages/turfs-management/TurfCreateForm";
+import TurfManagement from "./dashboard/pages/turfs-management/TurfManagement";
 import LoginLayout from "./features/auth/LoginLayout";
 import "./index.css";
 import DashboardLayout from "./layouts/main/DashboardLayout";
 import MainLayout from "./layouts/main/MainLayout";
 import About from "./pages/About";
 import FootballTurfLanding from "./pages/Home";
+import PageNotFound from "./pages/PageNotFound";
 
 const queryClient = new QueryClient();
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route>
-      {/* Public Routes */}
-      <Route element={<MainLayout />}></Route>
+      {/* Public routes */}
       <Route element={<MainLayout />}>
-        <Route path="/" element={<FootballTurfLanding />} />
-        <Route path="/about" element={<About />} />
+        <Route index element={<FootballTurfLanding />} />
+        <Route path="about" element={<About />} />
       </Route>
-      <Route path="*" element={<div>404 Not Found</div>} />
 
-      {/* Separate route for dashboard login */}
-      <Route path="/auth" element={<LoginLayout />}>
+      {/* Authentication routes */}
+      <Route path="auth" element={<LoginLayout />}>
         <Route path="login" element={<LoginDashboard />} />
         <Route path="authenticated" element={<LoginAuthenticated />} />
       </Route>
 
-      <Route path="/dashboard" element={<DashboardLayout />}>
-        <Route path="turf-management" element={<TurfManagement />} />
-        <Route
-          path="turf-management/create-turf"
-          element={<TurfCreateForm />}
-        />
+      {/* Protected dashboard routes */}
+      <Route path="dashboard" element={<DashboardLayout />}>
+        <Route index element={<Dashboard />} />
+        <Route path="booking-management">
+          <Route index element={<BookingManagement />} />
+          <Route path="blocked-slots" element={<BlockedSlots />} />
+          {/* Future nested routes can go here */}
+        </Route>
+        <Route path="customers-management" element={<CustomerManagement />} />
+        <Route path="turf-management">
+          <Route index element={<TurfManagement />} />
+          <Route path="create-turf" element={<TurfCreateForm />} />
+        </Route>
+
+        <Route path="*" element={<PageNotFound />} />
       </Route>
+
+      {/* Catch all route for 404 */}
     </Route>
   )
 );

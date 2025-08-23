@@ -82,7 +82,6 @@ const RegisterForm = () => {
           </h1>
           <p className="text-gray-500">Create Your Account to Get Started</p>
         </div>
-
         <div className="space-y-4">
           <div>
             <label

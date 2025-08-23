@@ -2,12 +2,14 @@ import { handleAdminLogout } from "@/dashboard/api/apiServices";
 import { useMutation } from "@tanstack/react-query";
 import { Bell, Menu } from "lucide-react";
 import { useState } from "react";
+import { useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 
 export default function Header({ activeTab, userRole, setSidebarOpen }) {
   const userInfo = JSON.parse(localStorage.getItem("userInfo"));
   const [dropdownOpen, setDropdownOpen] = useState(false);
-
+  const location = useLocation();
+  console.log(location.pathname);
   const handleDropdownToggle = () => {
     setDropdownOpen((prev) => !prev);
   };
@@ -43,9 +45,6 @@ export default function Header({ activeTab, userRole, setSidebarOpen }) {
               >
                 <Menu className="w-6 h-6" />
               </button>
-              <h1 className="ml-2 text-xl font-semibold text-gray-900 capitalize">
-                {activeTab}
-              </h1>
             </div>
 
             <div className="flex items-center space-x-4">
