@@ -15,8 +15,9 @@ const useAuthStore = createte((set) => ({
       set(() => ({ User: null }));
     }
   },
+  logout: () => {},
 
-  useLogin: (userData) => {
+  useLogin: () => {
     return useMutation({
       mutationFn: async () => {
         const userData = await handleLoginFootballTurf(data);
