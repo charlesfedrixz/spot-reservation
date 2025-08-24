@@ -7,14 +7,14 @@ import {
   Route,
 } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
-import BlockedSlots from "./dashboard/pages/bookings-management/BlockedSlots";
-import BookingManagement from "./dashboard/pages/bookings-management/BookingManagement";
-import CustomerManagement from "./dashboard/pages/customers-management/CustomerManagement";
+import BlockedSlots from "./dashboard/pages/Admin/bookings-management/BlockedSlots";
+import BookingManagement from "./dashboard/pages/Admin/bookings-management/BookingManagement";
+import CustomerManagement from "./dashboard/pages/Admin/customers-management/CustomerManagement";
+import Dashboard from "./dashboard/pages/Admin/overview/Dashboard";
+import TurfCreateForm from "./dashboard/pages/Admin/turfs-management/TurfCreateForm";
+import TurfManagement from "./dashboard/pages/Admin/turfs-management/TurfManagement";
 import LoginAuthenticated from "./dashboard/pages/login/LoginAuthenticated";
 import LoginDashboard from "./dashboard/pages/login/LoginDashboard";
-import Dashboard from "./dashboard/pages/overview/Dashboard";
-import TurfCreateForm from "./dashboard/pages/turfs-management/TurfCreateForm";
-import TurfManagement from "./dashboard/pages/turfs-management/TurfManagement";
 import LoginLayout from "./features/auth/LoginLayout";
 import "./index.css";
 import DashboardLayout from "./layouts/main/DashboardLayout";
