@@ -53,9 +53,8 @@ const router = createBrowserRouter(
           <Route index element={<TurfManagement />} />
           <Route path="create-turf" element={<TurfCreateForm />} />
         </Route>
-
-        <Route path="*" element={<PageNotFound />} />
       </Route>
+      <Route path="*" element={<PageNotFound />} />
 
       {/* Catch all route for 404 */}
     </Route>

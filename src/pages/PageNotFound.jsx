@@ -1,6 +1,9 @@
 import { Link } from "react-router-dom";
 
 const PageNotFound = () => {
+  const isAdmin = window.location.pathname.includes("dashboard");
+  const homeRoute = isAdmin ? "/dashboard" : "/";
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="text-center px-4">
@@ -27,7 +30,7 @@ const PageNotFound = () => {
           The page you're looking for doesn't seem to exist.
         </p>
         <Link
-          to="/dashboard"
+          to={homeRoute}
           className="inline-block px-6 py-3 bg-blue-600 hover:bg-blue-700 
                     text-white font-semibold rounded-lg transition duration-300 ease-in-out 
                     transform hover:scale-105"
