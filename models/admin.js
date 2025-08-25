@@ -45,9 +45,10 @@ const adminSchema = new mongoose.Schema(
     permissions: {
       type: [
         {
-          title: String,
-          url: String,
+          id: String,
+          name: String,
           icon: String,
+          section: Boolean,
         },
       ],
       default: [],

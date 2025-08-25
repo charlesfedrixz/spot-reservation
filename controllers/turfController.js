@@ -1,6 +1,7 @@
 import asyncHandler from "express-async-handler";
 import { v2 as cloudinary } from "cloudinary";
 import multer from "multer";
+import mongoose from "mongoose";
 import sharp from "sharp";
 import { PassThrough } from "stream";
 import { CloudinaryStorage } from "multer-storage-cloudinary";
@@ -143,8 +144,13 @@ export const deleteTurf = asyncHandler(async (req, res) => {
   if (req.admin.role !== "Super_Admin")
     return errorResponse(res, 403, "Unauthorized to delete Turf!");
   try {
-    const turfId = req.params;
+    const turfId = req.params.turfId;
     if (!turfId) return errorResponse(res, 400, "Please provide a valid Id!");
+    if (!mongoose.Types.ObjectId.isValid(turfId)) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid Turf ID" });
+    }
     const findUser = await Turf.findByIdAndDelete(turfId);
     if (!findUser) return errorResponse(res, 404, "Turf not found!");
     return successResponse(res, 200, null, "Delete Turf successfully!");
@@ -175,7 +181,7 @@ export const turfList = asyncHandler(async (req, res) => {
 export const updateTurf = asyncHandler(async (req, res) => {
   if (req.admin.role !== "Super_Admin")
     return errorResponse(res, 403, "Unauthorized to update!");
-  const turfId = req.params;
+  const turfId = req.params.turfId;
   const {
     name,
     description,

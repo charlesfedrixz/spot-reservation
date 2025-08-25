@@ -8,6 +8,10 @@ import {
   logout,
   verifyOtp,
   sendOtp,
+  getPermission,
+  addPermission,
+  updatePermissions,
+  deletePermissions,
 } from "../controllers/adminController.js";
 import isAdmin from "../middleware/adminAuth.js";
 
@@ -20,5 +24,9 @@ adminRoute.post("/logout", isAdmin, logout);
 adminRoute.get("/adminList", getUser);
 adminRoute.post("/deleteAdmin", deleteUser);
 adminRoute.post("/updateAdmin", updateUser);
+adminRoute.get("/getPermissions", isAdmin, getPermission);
+adminRoute.post("/addPermissions/:adminId", isAdmin, addPermission);
+adminRoute.put("/updatePermissions/:adminId", isAdmin, updatePermissions);
+adminRoute.delete("/deletePermissions/:adminId", isAdmin, deletePermissions);
 
 export default adminRoute;

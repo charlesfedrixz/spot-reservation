@@ -172,7 +172,12 @@ export const verifyOtp = asyncHandler(async (req, res) => {
     return successResponse(
       res,
       200,
-      { email: adminUser.email, role: adminUser.role, turf: adminUser.turf },
+      {
+        email: adminUser.email,
+        role: adminUser.role,
+        id: adminUser._id,
+        turf: adminUser.turf,
+      },
       "OTP verified successfully"
     );
   } catch (error) {
@@ -245,5 +250,206 @@ export const updateUser = asyncHandler(async (req, res) => {
   } catch (error) {
     console.log("Update Data failed:", error);
     return errorResponse(res, 500, "Update Data Failed due to server error");
+  }
+});
+
+export const getPermission = asyncHandler(async (req, res) => {
+  if (req.admin.role !== "Super_Admin" && req.admin.role !== "Turf_Admin")
+    return errorResponse(res, 400, "Unauthorized to access to get permission!");
+  try {
+    const AdminId = req.admin._id;
+    const admin = await Admin.findById(AdminId);
+    if (!admin) return errorResponse(res, 400, "Admin not found!");
+
+    return successResponse(
+      res,
+      200,
+      admin.permissions,
+      "Permission list successfully!"
+    );
+  } catch (error) {
+    console.error("Failed to get permission!:", error);
+    return errorResponse(
+      res,
+      500,
+      "Get Permission failed due to server error!"
+    );
+  }
+});
+
+// export const addPermission = asyncHandler(async (req, res) => {
+//   if (req.admin.role !== "Super_Admin" && req.admin.role !== "Turf_Admin")
+//     return errorResponse(res, 400, "Unauthorized to access to add permission!");
+
+//   const { adminId } = req.params;
+//   const { permissions } = req.body;
+//   if (!permissions)
+//     return errorResponse(res, 400, "Please provide a permissions");
+//   if (!mongoose.isValidObjectId(adminId)) {
+//     return errorResponse(res, 400, "Invalid user ID format");
+//   }
+
+//   const admin = await Admin.findById(adminId);
+//   if (!admin) return errorResponse(res, 400, "Admin not found!");
+//   admin.permissions.push(...permissions);
+//   await admin.save();
+
+//   return successResponse(res, 200, null, "Permissions added!");
+// });
+
+export const addPermission = asyncHandler(async (req, res) => {
+  if (req.admin.role !== "Super_Admin" && req.admin.role !== "Turf_Admin") {
+    return errorResponse(res, 400, "Unauthorized to add permission!");
+  }
+
+  const { adminId } = req.params;
+  if (!mongoose.isValidObjectId(adminId)) {
+    return errorResponse(res, 400, "Invalid user ID format");
+  }
+
+  const admin = await Admin.findById(adminId);
+  if (!admin) return errorResponse(res, 400, "Admin not found!");
+
+  // Define role-based permissions
+  const allPermissions = [
+    { id: "dashboard", name: "Dashboard", icon: "BarChart3", section: false },
+    { id: "system-header", name: "System Management", section: true },
+    {
+      id: "user-management",
+      name: "User Management",
+      icon: "Users",
+      section: false,
+    },
+    {
+      id: "roles-permissions",
+      name: "Roles & Permissions",
+      icon: "Shield",
+      section: false,
+    },
+    {
+      id: "system-settings",
+      name: "System Settings",
+      icon: "Settings",
+      section: false,
+    },
+    { id: "business-header", name: "Business Overview", section: true },
+    { id: "analytics", name: "Analytics", icon: "BarChart3", section: false },
+    {
+      id: "revenue-reports",
+      name: "Revenue Reports",
+      icon: "IndianRupee",
+      section: false,
+    },
+    { id: "all-turfs", name: "All Turfs", icon: "Building", section: false },
+    { id: "operations-header", name: "Operations", section: true },
+    {
+      id: "support-tickets",
+      name: "Support Tickets",
+      icon: "Headphones",
+      section: false,
+    },
+    {
+      id: "refund-management",
+      name: "Refund Management",
+      icon: "Banknote",
+      section: false,
+    },
+  ];
+
+  const turfAdminPermissions = [
+    { id: "dashboard", name: "Dashboard", icon: "BarChart3", section: false },
+    { id: "business-header", name: "Business Overview", section: true },
+    { id: "analytics", name: "Analytics", icon: "BarChart3", section: false },
+    {
+      id: "revenue-reports",
+      name: "Revenue Reports",
+      icon: "IndianRupee",
+      section: false,
+    },
+    { id: "all-turfs", name: "All Turfs", icon: "Building", section: false },
+    { id: "operations-header", name: "Operations", section: true },
+    {
+      id: "support-tickets",
+      name: "Support Tickets",
+      icon: "Headphones",
+      section: false,
+    },
+    {
+      id: "refund-management",
+      name: "Refund Management",
+      icon: "Banknote",
+      section: false,
+    },
+  ];
+
+  // Assign based on role
+  if (admin.role === "Super_Admin") {
+    admin.permissions = allPermissions;
+  } else if (admin.role === "Turf_Admin") {
+    admin.permissions = turfAdminPermissions;
+  }
+
+  await admin.save();
+
+  return successResponse(
+    res,
+    200,
+    admin.permissions,
+    `Permissions assigned for role: ${admin.role}`
+  );
+});
+
+export const deletePermissions = asyncHandler(async (req, res) => {
+  if (req.admin.role !== "Super_Admin") {
+    return errorResponse(res, 401, "Unauthorized to delete permissions");
+  }
+
+  const { adminId } = req.params;
+  if (!adminId) return errorResponse(res, 400, "Please provide a  adminId!");
+  if (!mongoose.isValidObjectId(adminId)) {
+    return errorResponse(res, 400, "Invalid permission ID format");
+  }
+  const { permissionIds } = req.body;
+
+  const adminToBeUpdated = await Admin.findById(adminId);
+  if (!adminId) return errorResponse(res, 400, "Admin not found!");
+  adminToBeUpdated.permissions = adminToBeUpdated.permissions.filter(
+    (permission) => !permissionIds.includes(permission._id.toString())
+  );
+  await adminToBeUpdated.save();
+  return successResponse(res, 200, null, "Permissions deleted");
+});
+
+export const updatePermissions = asyncHandler(async (req, res) => {
+  if (req.admin.role !== "Super_Admin") {
+    return errorResponse(res, 401, "Unauthorized to update permissions!");
+  }
+  try {
+    const { adminId } = req.params;
+
+    if (!mongoose.isValidObjectId(adminId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid permission ID format",
+      });
+    }
+
+    const { permissions } = req.body;
+    if (!permissions)
+      return errorResponse(res, 401, "Please provide a permissions!");
+    const adminToBeUpdated = await Admin.findById(adminId);
+    if (!adminToBeUpdated)
+      return errorResponse(res, 401, "Permission not found!");
+    adminToBeUpdated.permissions = permissions;
+    await adminToBeUpdated.save();
+
+    return successResponse(res, 200, null, "Permissions updated");
+  } catch (error) {
+    console.error("Failed to update permission!:", error);
+    return errorResponse(
+      res,
+      500,
+      "Update Permission failed due to server error!"
+    );
   }
 });

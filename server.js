@@ -28,7 +28,7 @@ app.use(express.urlencoded({ extended: false }));
 // Enable CORS
 app.use(
   cors({
-    origin: ["https://d6edd98dfc1f.ngrok-free.app", "https://localhost:3000"], // Your frontend URLs
+    origin: ["https://d0e622baf75b.ngrok-free.app", "https://localhost:3000"], // Your frontend URLs
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: [
