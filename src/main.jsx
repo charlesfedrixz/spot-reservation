@@ -15,9 +15,11 @@ import TurfCreateForm from "./dashboard/pages/Admin/turfs-management/TurfCreateF
 import TurfManagement from "./dashboard/pages/Admin/turfs-management/TurfManagement";
 import LoginAuthenticated from "./dashboard/pages/login/LoginAuthenticated";
 import LoginDashboard from "./dashboard/pages/login/LoginDashboard";
-import LoginLayout from "./features/auth/LoginLayout";
+import LoginForm from "./features/auth/LoginForm";
+import RegisterForm from "./features/auth/RegisterForm";
 import "./index.css";
 import DashboardLayout from "./layouts/main/DashboardLayout";
+import LoginLayout from "./layouts/main/LoginLayout";
 import MainLayout from "./layouts/main/MainLayout";
 import About from "./pages/About";
 import FootballTurfLanding from "./pages/Home";
@@ -34,7 +36,13 @@ const router = createBrowserRouter(
         <Route path="about" element={<About />} />
       </Route>
 
-      {/* Authentication routes */}
+      {/* Authentication routes for users */}
+      <Route path="user" element={<LoginLayout />}>
+        <Route path="login" element={<LoginForm />} />
+        <Route path="register" element={<RegisterForm />} />
+      </Route>
+
+      {/* Authentication routes for admin and super_admin */}
       <Route path="auth" element={<LoginLayout />}>
         <Route path="login" element={<LoginDashboard />} />
         <Route path="authenticated" element={<LoginAuthenticated />} />

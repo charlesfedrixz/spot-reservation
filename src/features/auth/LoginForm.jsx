@@ -1,6 +1,7 @@
 import useLoginForm from "@/hooks/api/useLoginForm";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import logo from "../../../public/favicon/searchMyPlay.png";
 
 const LoginForm = () => {
   const [form, setForm] = useState({ number: "", password: "" });
@@ -43,9 +44,10 @@ const LoginForm = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-500 via-green-400 to-purple-400 flex items-center justify-center">
-      <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8">
-        <div className="mb-6 text-center">
+    <div>
+      <div className="max-w-xl w-full bg-white rounded-2xl shadow-xl p-6">
+        <div className="flex flex-col items-center mb-6">
+          <img src={logo} alt="MyPlay Logo" className="h-16 w-auto mb-4" />
           <h1 className="text-3xl font-extrabold text-gray-800 mb-2">
             Welcome to <span className="text-green-600">MyPlay</span>
           </h1>
@@ -110,7 +112,7 @@ const LoginForm = () => {
         <p className="text-center text-sm text-gray-600 mt-6">
           Don't have an account?{" "}
           <a
-            href="/register"
+            href="/user/register"
             className="text-blue-500 hover:underline font-medium"
           >
             Register here

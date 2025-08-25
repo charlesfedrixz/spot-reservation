@@ -1,14 +1,16 @@
+import { getAllPermissions } from "@/dashboard/api/apiServices";
+import { useQuery } from "@tanstack/react-query";
 import {
+  Banknote,
   BarChart3,
-  Bell,
+  Building,
   ChevronDown,
-  FileText,
-  Home,
+  Headphones,
+  IndianRupee,
   LogOut,
   Menu,
-  Package,
   Settings,
-  ShoppingCart,
+  Shield,
   Users,
   X,
 } from "lucide-react";
@@ -18,58 +20,59 @@ import { NavLink } from "react-router-dom";
 const Sidebar = ({ userRole }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
 
-  const menuItems = [
-    { id: "dashboard", label: "Dashboard", icon: Home, href: "/dashboard" },
-    {
-      id: "booking-management",
-      label: "Booking Management",
-      icon: Users,
-      href: "/dashboard/booking-management", // ✅ Correct path
-      badge: "12",
+  const Icons = {
+    BarChart3: BarChart3,
+    Users: Users,
+    Shield: Shield,
+    Settings: Settings,
+    IndianRupee: IndianRupee,
+    Building: Building,
+    Headphones: Headphones,
+    Banknote: Banknote,
+  };
+
+  const {
+    data: permissions,
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: ["permissions"],
+    queryFn: getAllPermissions,
+    onSuccess: (data) => {
+      console.log("Permissions data:", data);
+      // You can set state or context here if needed
     },
-    {
-      id: "customers-management",
-      label: "Customers",
-      icon: Users,
-      href: "/dashboard/customers-management",
+    onError: (error) => {
+      console.error("Error fetching permissions:", error);
     },
-    {
-      id: "turf-management",
-      label: "Turfs",
-      icon: Package,
-      href: "/dashboard/turf-management",
-    },
-    {
-      id: "orders",
-      label: "Orders",
-      icon: ShoppingCart,
-      href: "/dashboard/orders",
-    }, // add route if needed
-    {
-      id: "analytics",
-      label: "Analytics",
-      icon: BarChart3,
-      href: "/dashboard/analytics",
-    }, // add route if needed
-    {
-      id: "reports",
-      label: "Reports",
-      icon: FileText,
-      href: "/dashboard/reports",
-    }, // add route if needed
-    {
-      id: "notifications",
-      label: "Notifications",
-      icon: Bell,
-      href: "/dashboard/notifications",
-    }, // add route if needed
-    {
-      id: "settings",
-      label: "Settings",
-      icon: Settings,
-      href: "/dashboard/settings",
-    }, // add route if needed
-  ];
+  });
+  console.log("permissions", permissions);
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+  if (isError) {
+    return <div>Error: {error.message}</div>;
+  }
+
+  const grouped = {};
+  let currentSection = null;
+
+  permissions?.data?.forEach((item) => {
+    if (item.section) {
+      currentSection = item.name;
+      grouped[currentSection] = [];
+    } else {
+      // If no currentSection, treat it as top-level (e.g., Dashboard)
+      if (!currentSection) {
+        currentSection = "General"; // or leave as "Dashboard"
+        grouped[currentSection] = [];
+      }
+      grouped[currentSection].push(item);
+    }
+  });
+
+  console.log(grouped);
 
   return (
     <div
@@ -107,46 +110,55 @@ const Sidebar = ({ userRole }) => {
       {/* Navigation */}
       <nav className="flex-1 py-4">
         <ul className="space-y-2 px-3">
-          {menuItems.map((item) => {
-            const Icon = item.icon;
+          {Object.entries(grouped).map(([section, items]) => (
+            <li key={section}>
+              {/* Section Header */}
+              <div
+                className={`text-xs font-bold text-slate-400 uppercase mt-4 mb-2 ${
+                  isCollapsed ? "hidden" : "block"
+                }`}
+              >
+                {section}
+              </div>
 
-            return (
-              <li key={item.id}>
-                <NavLink
-                  to={item.href}
-                  end
-                  className={({ isActive }) =>
-                    `flex items-center space-x-3 px-3 py-2.5 rounded-lg transition-colors group relative ${
-                      isActive
-                        ? "bg-blue-600 text-white"
-                        : "text-slate-300 hover:bg-slate-800 hover:text-white"
-                    }`
-                  }
-                >
-                  <Icon size={20} className="flex-shrink-0" />
-                  <span
-                    className={`font-medium ${
-                      isCollapsed ? "hidden" : "block"
-                    }`}
-                  >
-                    {item.label}
-                  </span>
-                  {item.badge && !isCollapsed && (
-                    <span className="ml-auto bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">
-                      {item.badge}
-                    </span>
-                  )}
+              {/* Section Items */}
+              <ul className="space-y-1">
+                {items.map((item) => {
+                  const Icon = Icons[item.icon]; // Correct: pick icon from item
 
-                  {/* Tooltip for collapsed state */}
-                  {isCollapsed && (
-                    <div className="absolute left-full ml-2 px-2 py-1 bg-slate-800 text-white text-sm rounded-md opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50">
-                      {item.label}
-                    </div>
-                  )}
-                </NavLink>
-              </li>
-            );
-          })}
+                  return (
+                    <li key={item.id}>
+                      <NavLink
+                        to={`/${item.id}`} // use id for route
+                        className={({ isActive }) =>
+                          `flex items-center space-x-3 px-3 py-2.5 rounded-lg transition-colors group relative ${
+                            isActive
+                              ? "bg-blue-600 text-white"
+                              : "text-slate-300 hover:bg-slate-800 hover:text-white"
+                          }`
+                        }
+                      >
+                        {/* Icon */}
+                        {Icon && <Icon size={20} className="flex-shrink-0" />}
+
+                        {/* Label */}
+                        <span className={`${isCollapsed ? "hidden" : "block"}`}>
+                          {item.name}
+                        </span>
+
+                        {/* Tooltip when collapsed */}
+                        {isCollapsed && (
+                          <div className="absolute left-full ml-2 px-2 py-1 bg-slate-800 text-white text-sm rounded-md opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50">
+                            {item.name}
+                          </div>
+                        )}
+                      </NavLink>
+                    </li>
+                  );
+                })}
+              </ul>
+            </li>
+          ))}
         </ul>
       </nav>
 

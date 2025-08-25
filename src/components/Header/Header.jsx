@@ -122,7 +122,7 @@ const AuthLinks = ({ isMobile = false }) => {
         custom={0}
       >
         <Link
-          to={"login"}
+          to={"user/login"}
           className="px-4 py-2 text-gray-600 hover:text-green-600 flex items-center transition-colors duration-200"
         >
           Login
@@ -136,7 +136,7 @@ const AuthLinks = ({ isMobile = false }) => {
         custom={1}
       >
         <Link
-          to={"register"}
+          to={"user/register"}
           className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-all duration-200 flex items-center transform hover:scale-105"
         >
           Register

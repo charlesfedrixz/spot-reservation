@@ -37,3 +37,13 @@ export const handleCreateTurf = async (data) => {
     throw error;
   }
 };
+
+export const getAllPermissions = async () => {
+  try {
+    const response = await Axios.get("api/admin/getPermissions");
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching permissions:", error);
+    throw error;
+  }
+};
