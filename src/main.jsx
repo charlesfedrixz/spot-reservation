@@ -11,6 +11,9 @@ import BlockedSlots from "./dashboard/pages/Admin/bookings-management/BlockedSlo
 import BookingManagement from "./dashboard/pages/Admin/bookings-management/BookingManagement";
 import CustomerManagement from "./dashboard/pages/Admin/customers-management/CustomerManagement";
 import Dashboard from "./dashboard/pages/Admin/overview/Dashboard";
+import RolePermissions from "./dashboard/pages/Admin/super-admin-site/system-management/Role&Permissions";
+import SystemSetting from "./dashboard/pages/Admin/super-admin-site/system-management/SystemSetting";
+import UserManagement from "./dashboard/pages/Admin/super-admin-site/system-management/UserManagement";
 import TurfCreateForm from "./dashboard/pages/Admin/turfs-management/TurfCreateForm";
 import TurfManagement from "./dashboard/pages/Admin/turfs-management/TurfManagement";
 import LoginAuthenticated from "./dashboard/pages/login/LoginAuthenticated";
@@ -24,7 +27,9 @@ import MainLayout from "./layouts/main/MainLayout";
 import About from "./pages/About";
 import FootballTurfLanding from "./pages/Home";
 import PageNotFound from "./pages/PageNotFound";
-
+import BookNow from "./pages/book-now/BookNow";
+import Contact from "./pages/contact/Contact";
+import OurTurfs from "./pages/our-turfs/OurTurfs";
 const queryClient = new QueryClient();
 
 const router = createBrowserRouter(
@@ -34,6 +39,10 @@ const router = createBrowserRouter(
       <Route element={<MainLayout />}>
         <Route index element={<FootballTurfLanding />} />
         <Route path="about" element={<About />} />
+        <Route path="our-turfs" element={<OurTurfs />} />
+        <Route path="our-turfs/id?/:id" element={<BookNow />} />
+        {/* <Route path="book-now" element={<BookNow />} /> */}
+        <Route path="contact" element={<Contact />} />
       </Route>
 
       {/* Authentication routes for users */}
@@ -51,6 +60,12 @@ const router = createBrowserRouter(
       {/* Protected dashboard routes */}
       <Route path="dashboard" element={<DashboardLayout />}>
         <Route index element={<Dashboard />} />
+        {/* super_admin routes */}
+        <Route path="user-management" element={<UserManagement />} />
+        <Route path="roles-permissions" element={<RolePermissions />} />
+        <Route path="system-settings" element={<SystemSetting />} />
+
+        {/* admin routes */}
         <Route path="booking-management">
           <Route index element={<BookingManagement />} />
           <Route path="blocked-slots" element={<BlockedSlots />} />

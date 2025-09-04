@@ -52,7 +52,7 @@ const RegisterForm = () => {
     setForm({ ...form, [e.target.name]: e.target.value });
     setErrors({ ...errors, [e.target.name]: "" });
   };
-  const { mutate, isPending } = useSignUpForm({ data: form });
+  const { mutate, isPending, isError, error } = useSignUpForm({ data: form });
 
   const handleSubmit = () => {
     if (validate()) {
@@ -78,7 +78,7 @@ const RegisterForm = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   return (
-    <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-6">
+    <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-6  ">
       <div className="mb-6 text-center">
         {/* Added logo */}
         <img
@@ -238,7 +238,11 @@ const RegisterForm = () => {
             </p>
           )}
         </div>
-
+        {isError && (
+          <p className="text-red-500 text-xs mt-1">
+            {error?.response?.data?.message}
+          </p>
+        )}
         <button
           type="button"
           onClick={handleSubmit}

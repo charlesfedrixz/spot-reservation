@@ -129,10 +129,17 @@ const Sidebar = ({ userRole }) => {
                   return (
                     <li key={item.id}>
                       <NavLink
-                        to={`/${item.id}`} // use id for route
+                        to={
+                          item.id === "dashboard"
+                            ? "/dashboard"
+                            : `/dashboard/${item.id}`
+                        }
                         className={({ isActive }) =>
                           `flex items-center space-x-3 px-3 py-2.5 rounded-lg transition-colors group relative ${
-                            isActive
+                            isActive &&
+                            (item.id === "dashboard"
+                              ? location.pathname === "/dashboard"
+                              : true)
                               ? "bg-blue-600 text-white"
                               : "text-slate-300 hover:bg-slate-800 hover:text-white"
                           }`

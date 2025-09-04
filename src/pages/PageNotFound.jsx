@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 const PageNotFound = () => {
   const isAdmin = window.location.pathname.includes("dashboard");
-  const homeRoute = isAdmin ? "/dashboard" : "/";
+  const homeRoute = isAdmin ? "/dashboard" : -1;
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">

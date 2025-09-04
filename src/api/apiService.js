@@ -19,3 +19,13 @@ export const handleSignUpFootballTurf = async (data) => {
     throw error;
   }
 };
+
+export const getAllFootballTurfs = async () => {
+  try {
+    const response = await Axios.get("api/turf/getTurf");
+    return response.data;
+  } catch (error) {
+    console.log("Error fetching turfs:", error);
+    throw error;
+  }
+};
