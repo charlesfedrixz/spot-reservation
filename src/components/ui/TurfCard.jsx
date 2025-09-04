@@ -5,7 +5,6 @@ import { FiMapPin, FiStar } from "react-icons/fi";
 import { Link } from "react-router-dom";
 
 export default function TurfCard({ turf, i }) {
-  console.log(turf?.image);
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const nextSlide = () =>

@@ -4,7 +4,6 @@ import { useFetchTurf } from "@/hooks/api/useFetchTurf";
 
 export default function OurTurfs() {
   const { data: turfs, isLoading, isError } = useFetchTurf();
-  console.log(turfs?.data);
   if (isLoading)
     return (
       <div className="min-h-[60vh] flex justify-center items-center">

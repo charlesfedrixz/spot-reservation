@@ -27,7 +27,7 @@ import MainLayout from "./layouts/main/MainLayout";
 import About from "./pages/About";
 import FootballTurfLanding from "./pages/Home";
 import PageNotFound from "./pages/PageNotFound";
-import BookNow from "./pages/book-now/BookNow";
+import FootballTurfBooking from "./pages/book-now/FootballTurfBooking";
 import Contact from "./pages/contact/Contact";
 import OurTurfs from "./pages/our-turfs/OurTurfs";
 const queryClient = new QueryClient();
@@ -40,7 +40,7 @@ const router = createBrowserRouter(
         <Route index element={<FootballTurfLanding />} />
         <Route path="about" element={<About />} />
         <Route path="our-turfs" element={<OurTurfs />} />
-        <Route path="our-turfs/id?/:id" element={<BookNow />} />
+        <Route path="our-turfs/id?/:id" element={<FootballTurfBooking />} />
         {/* <Route path="book-now" element={<BookNow />} /> */}
         <Route path="contact" element={<Contact />} />
       </Route>
