@@ -1,11 +1,11 @@
-import react from "@vitejs/plugin-react";
 import fs from "fs";
+import lightswindPlugin from "lightswind/plugin.js";
 import path from "path";
 import { defineConfig } from "vite";
 // export const ngrokDomain = import.meta.env.VITE_API_URL;
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  plugins: [lightswindPlugin()],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"), // Maps "@" to "./src"

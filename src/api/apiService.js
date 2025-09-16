@@ -23,9 +23,21 @@ export const handleSignUpFootballTurf = async (data) => {
 export const getAllFootballTurfs = async () => {
   try {
     const response = await Axios.get("api/turf/getTurf");
-    return response.data;
+    return response?.data?.data || [];
   } catch (error) {
     console.log("Error fetching turfs:", error);
+    throw error;
+  }
+};
+
+export const handleFilterByDataAndTime = async (date, slotStart, slotEnd) => {
+  try {
+    const response = await Axios.post(
+      `api/turf/getAll?date=${date}&slotStart=${slotStart}&slotEnd=${slotEnd}`
+    );
+    return response?.data?.data;
+  } catch (error) {
+    console.log("Error filtered:", error);
     throw error;
   }
 };

@@ -11,7 +11,7 @@ export default function OurTurfs() {
       </div>
     );
   if (isError) return <div>Error loading turfs. Please try again later.</div>;
-
+  console.log(turfs);
   // Animation variants for cards
   const cardVariants = {
     hidden: { opacity: 0, y: 50 },
@@ -25,7 +25,7 @@ export default function OurTurfs() {
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold text-center mb-8">Our Turfs</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {turfs?.data?.map((turf, i) => (
+        {turfs?.map((turf, i) => (
           <TurfCard key={turf._id} turf={turf} i={i} />
           // <motion.div
           //   key={turf._id}

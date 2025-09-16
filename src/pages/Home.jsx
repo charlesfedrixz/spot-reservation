@@ -1,4 +1,5 @@
 import FeaturesTurf from "@/features/home/FeaturesTurf";
+import FilterTurf from "@/features/home/FilterTurf";
 import HeroSection from "@/features/home/HeroSection";
 import Testimonials from "@/features/home/Testimonials";
 import { useState } from "react";
@@ -58,6 +59,10 @@ const FootballTurfLanding = () => {
 
       {/* Hero Section */}
       <HeroSection />
+
+      <div className="p-5">
+        <FilterTurf />
+      </div>
       {/* Featured Turfs   Section */}
 
       <FeaturesTurf turfs={turfs} />

@@ -1,17 +1,13 @@
+import { getAllFootballTurfs } from "@/api/apiService";
 import { Axios } from "@/lib/axiosSetup";
 import { useQuery } from "@tanstack/react-query";
 import {
   AlertCircle,
-  Car,
   CheckCircle,
   ChevronLeft,
   ChevronRight,
   Clock,
-  Coffee,
-  Home,
   MapPin,
-  Star,
-  Wifi,
 } from "lucide-react";
 import { useState } from "react";
 import DatePicker from "react-datepicker";
@@ -24,10 +20,10 @@ const FootballTurfBooking = () => {
   const [bookingStatus, setBookingStatus] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [showAllSlots, setShowAllSlots] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   const paramas = useParams();
   const turfId = paramas?.id;
-  console.log(selectedDate, turfId?.id);
 
   const {
     data: fetchTimeSlots,
@@ -43,65 +39,72 @@ const FootballTurfBooking = () => {
     },
     enabled: !!turfId && !!selectedDate,
   });
-  console.log(fetchTimeSlots);
+
+  const {
+    data: fetchALlTurfs,
+    isLoading: allTurfsLoading,
+    isError: allTurfsError,
+  } = useQuery({
+    queryKey: ["allTurfs"],
+    queryFn: getAllFootballTurfs,
+  });
+  // console.log("allTurfs", fetchALlTurfs);
+  if (allTurfsLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="w-16 h-16 border-4 border-green-600 border-t-transparent border-solid rounded-full animate-spin"></div>
+      </div>
+    );
+  }
+
+  if (allTurfsError) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <p className="text-red-600">Error loading turfs. Please try again.</p>
+      </div>
+    );
+  }
+
+  const filterTurfs = fetchALlTurfs?.filter((turf) => turf?._id === turfId);
+  const turf = filterTurfs[0];
+  console.log(turf);
+  // console.log(filterTurfs?.image[currentImageIndex]);
 
   // Single turf data
-  const turf = {
-    id: 1,
-    name: "Champions Arena",
-    size: "11v11",
-    images: [
-      "https://images.unsplash.com/photo-1556056504-5c7696c4c28d?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1575361204480-aadea25e6e68?w=800&h=600&fit=crop",
-    ],
-    location: "Downtown Sports Complex, Sector 15",
-    rating: 4.8,
-    reviews: 124,
-    pricePerHour: 150,
-    features: [
-      { icon: <Wifi className="w-4 h-4" />, name: "Free WiFi" },
-      { icon: <Car className="w-4 h-4" />, name: "Free Parking" },
-      { icon: <Home className="w-4 h-4" />, name: "Changing Rooms" },
-      { icon: <Coffee className="w-4 h-4" />, name: "Refreshments" },
-    ],
-    description:
-      "Premium artificial grass turf with professional lighting and world-class facilities. Perfect for competitive matches and training sessions.",
-    specifications: {
-      surface: "Premium Artificial Grass",
-      lighting: "LED Floodlights",
-      capacity: "22 Players",
-      dimensions: "100m x 64m",
-    },
-  };
-
-  // Sample user data
+  // const turf = {
+  //   id: 1,
+  //   name: "Champions Arena",
+  //   size: "11v11",
+  //   images: [
+  //     "https://images.unsplash.com/photo-1556056504-5c7696c4c28d?w=800&h=600&fit=crop",
+  //     "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=800&h=600&fit=crop",
+  //     "https://images.unsplash.com/photo-1575361204480-aadea25e6e68?w=800&h=600&fit=crop",
+  //   ],
+  //   location: "Downtown Sports Complex, Sector 15",
+  //   rating: 4.8,
+  //   reviews: 124,
+  //   pricePerHour: 150,
+  //   features: [
+  //     { icon: <Wifi className="w-4 h-4" />, name: "Free WiFi" },
+  //     { icon: <Car className="w-4 h-4" />, name: "Free Parking" },
+  //     { icon: <Home className="w-4 h-4" />, name: "Changing Rooms" },
+  //     { icon: <Coffee className="w-4 h-4" />, name: "Refreshments" },
+  //   ],
+  //   description:
+  //     "Premium artificial grass turf with professional lighting and world-class facilities. Perfect for competitive matches and training sessions.",
+  //   specifications: {
+  //     surface: "Premium Artificial Grass",
+  //     lighting: "LED Floodlights",
+  //     capacity: "22 Players",
+  //     dimensions: "100m x 64m",
+  //   },
+  // };
   const userId = "user_12345";
-
-  // Time slots with hour ranges
-  const timeSlots = [
-    { value: "06:00-07:00", label: "06:00 AM to 07:00 AM", available: true },
-    { value: "07:00-08:00", label: "07:00 AM to 08:00 AM", available: true },
-    { value: "08:00-09:00", label: "08:00 AM to 09:00 AM", available: false },
-    { value: "09:00-10:00", label: "09:00 AM to 10:00 AM", available: true },
-    { value: "10:00-11:00", label: "10:00 AM to 11:00 AM", available: true },
-    { value: "11:00-12:00", label: "11:00 AM to 12:00 PM", available: true },
-    { value: "12:00-13:00", label: "12:00 PM to 01:00 PM", available: false },
-    { value: "13:00-14:00", label: "01:00 PM to 02:00 PM", available: true },
-    { value: "14:00-15:00", label: "02:00 PM to 03:00 PM", available: true },
-    { value: "15:00-16:00", label: "03:00 PM to 04:00 PM", available: true },
-    { value: "16:00-17:00", label: "04:00 PM to 05:00 PM", available: true },
-    { value: "17:00-18:00", label: "05:00 PM to 06:00 PM", available: true },
-    { value: "18:00-19:00", label: "06:00 PM to 07:00 PM", available: true },
-    { value: "19:00-20:00", label: "07:00 PM to 08:00 PM", available: false },
-    { value: "20:00-21:00", label: "08:00 PM to 09:00 PM", available: true },
-    { value: "21:00-22:00", label: "09:00 PM to 10:00 PM", available: true },
-  ];
 
   // Get minimum date (today)
   const today = new Date().toISOString().split("T")[0];
 
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  //handle booking function
 
   const handleBooking = async () => {
     if (!selectedDate || !selectedTimeSlot) {
@@ -128,7 +131,7 @@ const FootballTurfBooking = () => {
         turfName: turf.name,
         pricePerHour: turf.pricePerHour,
       };
-
+      console.log(startTime, endTime);
       // Simulate network delay
       await new Promise((resolve) => setTimeout(resolve, 2000));
 
@@ -151,7 +154,9 @@ const FootballTurfBooking = () => {
       setIsLoading(false);
     }
   };
+  // end of this function
 
+  //Image navigation functions
   const nextImage = () => {
     setCurrentImageIndex((prev) => (prev + 1) % turf.images.length);
   };
@@ -162,15 +167,16 @@ const FootballTurfBooking = () => {
     );
   };
 
-  function formatTimeLabel(label) {
+  // Format time label from "06:00 to 07:00" to "06:00 AM - 07:00 AM"
+  const formatTimeLabel = (label) => {
     if (!label) return "";
 
     const [start, end] = label.split(" to "); // "06:00", "07:00"
 
     return `${formatTime(start)} - ${formatTime(end)}`;
-  }
+  };
 
-  function formatTime(time) {
+  const formatTime = (time) => {
     const [hour, minute] = time.split(":");
     const date = new Date();
     date.setHours(+hour, +minute);
@@ -179,10 +185,18 @@ const FootballTurfBooking = () => {
       minute: "2-digit",
       hour12: true,
     });
-  }
+  };
 
-  const visibleSlots = showAllSlots ? timeSlots : timeSlots.slice(0, 6);
+  const images =
+    Array.isArray(filterTurfs) && filterTurfs.length > 0
+      ? filterTurfs[0].image
+      : [];
+  const safeIndex =
+    images && images.length > 0 && currentImageIndex < images.length
+      ? currentImageIndex
+      : 0;
 
+  console.log(currentImageIndex);
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Mobile-first container with proper spacing */}
@@ -204,44 +218,48 @@ const FootballTurfBooking = () => {
               {/* Image Gallery - Responsive height and controls */}
               <div className="relative mb-4 sm:mb-6">
                 <div className="relative overflow-hidden rounded-lg">
-                  <img
-                    src={turf.images[currentImageIndex]}
-                    alt={turf.name}
-                    className="w-full h-48 sm:h-64 md:h-72 lg:h-80 object-cover transition-transform duration-300"
-                  />
-
+                  {images.length > 0 ? (
+                    <img
+                      src={images[safeIndex]}
+                      alt={filterTurfs?.name || "Turf Image"}
+                      className="w-full h-48 sm:h-64 md:h-72 lg:h-80 object-cover transition-transform duration-300"
+                    />
+                  ) : (
+                    <div className="w-full h-48 sm:h-64 md:h-72 lg:h-80 bg-gray-300 flex items-center justify-center">
+                      Loading image...
+                    </div>
+                  )}
                   {/* Navigation arrows - Hidden on small screens, visible on md+ */}
                   <button
                     onClick={prevImage}
-                    className="hidden md:flex absolute left-4 top-1/2 transform -translate-y-1/2 bg-black/50 text-white rounded-full p-2 hover:bg-black/70 transition-colors"
+                    className=" md:flex absolute left-4 top-1/2 transform -translate-y-1/2 bg-black/50 text-white rounded-full p-2 hover:bg-black/70 transition-colors"
                   >
                     <ChevronLeft className="w-5 h-5" />
                   </button>
                   <button
                     onClick={nextImage}
-                    className="hidden md:flex absolute right-4 top-1/2 transform -translate-y-1/2 bg-black/50 text-white rounded-full p-2 hover:bg-black/70 transition-colors"
+                    className=" md:flex absolute right-4 top-1/2 transform -translate-y-1/2 bg-black/50 text-white rounded-full p-2 hover:bg-black/70 transition-colors"
                   >
                     <ChevronRight className="w-5 h-5" />
                   </button>
-
                   {/* Image indicators */}
                   <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
-                    {turf.images.map((_, index) => (
-                      <button
-                        key={index}
-                        onClick={() => setCurrentImageIndex(index)}
-                        className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full transition-colors ${
-                          currentImageIndex === index
-                            ? "bg-white"
-                            : "bg-white/50"
-                        }`}
-                      />
-                    ))}
+                    {Array.isArray(filterTurfs?.image) &&
+                      filterTurfs?.image.map((_, index) => (
+                        <button
+                          key={index}
+                          onClick={() => setCurrentImageIndex(index)}
+                          className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full transition-colors ${
+                            currentImageIndex === index
+                              ? "bg-white"
+                              : "bg-white/50"
+                          }`}
+                        />
+                      ))}
                   </div>
-
                   {/* Size badge */}
                   <div className="absolute top-3 sm:top-4 right-3 sm:right-4 bg-green-600 text-white px-2 sm:px-3 py-1 rounded-full font-semibold text-xs sm:text-sm">
-                    {turf.size}
+                    {turf.side} vs {turf.side}
                   </div>
                 </div>
               </div>
@@ -250,51 +268,53 @@ const FootballTurfBooking = () => {
               <div className="grid lg:grid-cols-2 gap-4 sm:gap-6">
                 <div className="order-1 lg:order-1">
                   <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-2">
-                    {turf.name}
+                    {turf?.name}
                   </h2>
 
                   <div className="flex items-start sm:items-center mb-3">
                     <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-gray-500 mr-2 mt-0.5 sm:mt-0 flex-shrink-0" />
                     <span className="text-sm sm:text-base text-gray-600 leading-tight">
-                      {turf.location}
+                      {turf?.location?.address}
                     </span>
                   </div>
 
                   <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
                     <div className="flex items-center">
-                      <Star className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-400 mr-1" />
+                      {/* <Star className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-400 mr-1" /> */}
                       <span className="font-semibold text-gray-700 text-sm sm:text-base">
-                        {turf.rating}
+                        {/* {turf.rating} */}
                       </span>
                       <span className="text-gray-500 ml-1 text-sm sm:text-base">
-                        ({turf.reviews} reviews)
+                        {/* ({turf.reviews} reviews) */}
                       </span>
                     </div>
-                    FootballTurfLanding
                     <span className="text-xl sm:text-2xl font-bold text-green-600">
-                      ₹{turf.pricePerHour}/hr
+                      ₹{turf?.prices?.hourly?.price}/hr
                     </span>
                   </div>
 
                   <p className="text-sm sm:text-base text-gray-600 mb-4 leading-relaxed">
-                    {turf.description}
+                    {turf?.description}
                   </p>
 
                   {/* Features - Responsive grid */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
-                    {turf.features.map((feature, index) => (
-                      <div
-                        key={index}
-                        className="flex items-center text-gray-700"
-                      >
-                        <span className="text-green-600 mr-2 flex-shrink-0">
-                          {feature.icon}
-                        </span>
-                        <span className="text-sm sm:text-base">
-                          {feature.name}
-                        </span>
-                      </div>
-                    ))}
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      {turf?.amenities?.length > 0 ? (
+                        turf.amenities.map((feature, index) =>
+                          feature && !feature.includes("undefined") ? (
+                            <span
+                              key={index}
+                              className="bg-gray-100 text-gray-800 text-sm px-3 py-1 rounded-full"
+                            >
+                              {feature}
+                            </span>
+                          ) : null
+                        )
+                      ) : (
+                        <p className="text-muted-foreground">No Amenities</p>
+                      )}
+                    </div>
                   </div>
                 </div>
 
@@ -303,20 +323,21 @@ const FootballTurfBooking = () => {
                   <h3 className="text-base sm:text-lg font-semibold text-gray-800 mb-3">
                     Specifications
                   </h3>
-                  <div className="space-y-2 sm:space-y-2">
-                    {Object.entries(turf.specifications).map(([key, value]) => (
-                      <div
-                        key={key}
-                        className="flex justify-between items-start"
-                      >
-                        <span className="text-sm sm:text-base text-gray-600 capitalize flex-shrink-0 mr-2">
-                          {key.replace(/([A-Z])/g, " $1")}:
-                        </span>
-                        <span className="font-medium text-gray-800 text-sm sm:text-base text-right">
-                          {value}
-                        </span>
-                      </div>
-                    ))}
+                  <div className=" flex flex-row space-y-2 sm:space-y-2">
+                    <div className="flex gap-4  items-start">
+                      <span className="text-sm sm:text-base text-gray-600 capitalize flex-shrink-0 mr-2">
+                        Timing :
+                      </span>
+                      <span className="font-medium text-gray-800 text-sm sm:text-base text-right">
+                        {turf?.timing?.start} am - {turf?.timing?.end} pm
+                      </span>
+                      <span className="text-sm sm:text-base text-gray-600 capitalize flex-shrink-0 mr-2">
+                        side :
+                      </span>
+                      <span className="font-medium text-gray-800 text-sm sm:text-base text-right">
+                        {turf?.side} vs {turf?.side}
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -430,7 +451,7 @@ const FootballTurfBooking = () => {
                   <div>
                     <p className="text-xs sm:text-sm text-gray-600">Turf</p>
                     <p className="font-semibold text-sm sm:text-base">
-                      {turf.name} ({turf.size})
+                      {turf.name} ({turf.side} vs {turf.side})
                     </p>
                   </div>
                   <div>
@@ -445,7 +466,7 @@ const FootballTurfBooking = () => {
                     </p>
                     <p className="font-semibold text-sm sm:text-base">
                       {
-                        timeSlots.find(
+                        fetchTimeSlots?.timeSlots?.find(
                           (slot) => slot.value === selectedTimeSlot
                         )?.label
                       }
@@ -456,7 +477,7 @@ const FootballTurfBooking = () => {
                       Total Amount
                     </p>
                     <p className="font-semibold text-green-600 text-base sm:text-lg">
-                      ₹{turf.pricePerHour}
+                      ₹{turf?.prices?.hourly?.price}
                     </p>
                   </div>
                 </div>
@@ -502,7 +523,7 @@ const FootballTurfBooking = () => {
                     Processing Booking...
                   </div>
                 ) : (
-                  `Book Now - ₹${turf.pricePerHour}`
+                  `Book Now - ₹${turf?.prices?.hourly?.price}`
                 )}
               </button>
             </div>

@@ -105,7 +105,7 @@ export default function TurfCard({ turf, i }) {
           to={`/our-turfs/${turf._id}`}
           className="w-full py-2 px-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition block text-center"
         >
-          View Details
+          Book Now
         </Link>
       </div>
     </motion.div>
