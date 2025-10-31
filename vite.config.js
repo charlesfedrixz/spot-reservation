@@ -1,13 +1,20 @@
 import fs from "fs";
-import lightswindPlugin from "lightswind/plugin.js";
 import path from "path";
 import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
 // export const ngrokDomain = import.meta.env.VITE_API_URL;
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [lightswindPlugin()],
+  plugins: [react()],
+  css:{
+    postcss: "./postcss.config.js"
+  },
+  optimizeDeps:{
+    exclude: ['react-day-picker']
+  },
   resolve: {
     alias: {
+      // eslint-disable-next-line no-undef
       "@": path.resolve(__dirname, "./src"), // Maps "@" to "./src"
     },
   },
@@ -24,10 +31,4 @@ export default defineConfig({
       clientPort: 443, // ngrok HTTPS/WebSocket port
     },
   },
-  // server: {
-  //   https: {
-  //     key: fs.readFileSync("./certificates/localhost-key.pem"),
-  //     cert: fs.readFileSync("./certificates/localhost.pem"),
-  //   },
-  // },
 });

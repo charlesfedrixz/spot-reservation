@@ -1,12 +1,13 @@
 import FeaturesTurf from "@/features/home/FeaturesTurf";
 import FilterTurf from "@/features/home/FilterTurf";
 import HeroSection from "@/features/home/HeroSection";
+import HowItWorks from "@/features/home/HowItsWorks";
 import Testimonials from "@/features/home/Testimonials";
 import { useState } from "react";
 import { FiCalendar, FiClock } from "react-icons/fi";
 
 const FootballTurfLanding = () => {
-  const [activeTab, setActiveTab] = useState("home");
+  // const [activeTab, setActiveTab] = useState("home");
   const [bookingDate, setBookingDate] = useState(new Date());
   const [selectedSlot, setSelectedSlot] = useState(null);
 
@@ -54,7 +55,9 @@ const FootballTurfLanding = () => {
   ];
 
   return (
-    <div className="font-sans text-gray-800">
+    <div className="font-sans min-h-screen text-gray-800 "
+    // style={{background: 'rgb(238,246,241)'}}
+    >
       {/* Navigation Bar */}
 
       {/* Hero Section */}
@@ -69,7 +72,7 @@ const FootballTurfLanding = () => {
 
       {/* Booking Section */}
 
-      <section className="py-16 px-5 lg:px-20 bg-white">
+      <section className="py-16 px-5 lg:px-20 ">
         <div className="max-w-6xl mx-auto bg-gray-50 rounded-xl overflow-hidden shadow-lg">
           <div className="flex flex-col lg:flex-row">
             <div className="p-8 lg:p-12 flex-1">
@@ -135,7 +138,7 @@ const FootballTurfLanding = () => {
       </section>
 
       {/* Features Section */}
-      <section className="py-16 px-5 lg:px-20 bg-gray-50">
+      <section className="py-16 px-5 lg:px-20 ">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-3xl font-bold text-center mb-12">
             Why Choose Our Turfs?
@@ -172,6 +175,7 @@ const FootballTurfLanding = () => {
           </div>
         </div>
       </section>
+      <HowItWorks/>
 
       {/* Testimonials */}
       <Testimonials />

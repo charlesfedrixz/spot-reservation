@@ -1,9 +1,9 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { Home, Info, MapPin, Phone } from "lucide-react";
 import { useState } from "react";
-import { Link, NavLink } from "react-router-dom";
-import logo from "../../../public/favicon/searchMyPlay.png";
-
+import { Link, Links, NavLink } from "react-router-dom";
+import logo from "/favicon/searchMyPlay.png?url"
+import DynamicNavigation from "../lightswind/dynamic-navigation";
 // Constants
 const NAVIGATION_TABS = [
   { name: "home", label: "Home", icon: Home },
@@ -130,7 +130,7 @@ const NavigationTabItem = ({
         onClick={handleClick}
       >
         <Icon className="w-5 h-5 mr-1" />
-        {tab.label}
+        {tab?.label}
       </NavLink>
     </motion.div>
   );
@@ -322,8 +322,10 @@ const MobileMenu = ({
   </AnimatePresence>
 );
 
+
+
 // Main Header Component
-const Header = ({ user, setUser }) => {
+const Header = ({ user , setUser }) => {
   const [activeTab, setActiveTab] = useState(getActiveTabFromPath);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -341,6 +343,7 @@ const Header = ({ user, setUser }) => {
         <Logo />
         <HamburgerMenuButton isMenuOpen={isMenuOpen} onToggle={toggleMenu} />
       </div>
+
 
       {/* Mobile Menu */}
       <MobileMenu
@@ -364,7 +367,8 @@ const Header = ({ user, setUser }) => {
         ) : (
           <UserAvatar user={user} onLogout={handleLogout} />
         )}
-      </div>
+      </div> 
+      
     </nav>
   );
 };

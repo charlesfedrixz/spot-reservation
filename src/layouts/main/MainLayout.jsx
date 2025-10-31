@@ -1,9 +1,9 @@
 import ScrollToTop from "@/components/scrollToTop/ScrollToTop";
 import LocationPermission from "@/components/ui/LocationPermission";
-import { useState } from "react";
 import { Outlet } from "react-router-dom";
 import Footer from "../../components/Footer/Footer";
 import Header from "../../components/Header/Header";
+import { useState } from "react";
 
 export default function MainLayout() {
   const [user, setUser] = useState(
@@ -12,10 +12,10 @@ export default function MainLayout() {
       : null
   );
   return (
-    <div>
+    <div >
       <Header user={user} setUser={setUser} />
       <LocationPermission />
-      <div className="  bg-backgroundColor  min-h-[calc(100vh-64px)]">
+      <div className="  bg-[rgb(238,246,241)]  min-h-[calc(100vh-64px)]">
         <ScrollToTop />
         <Outlet />
       </div>

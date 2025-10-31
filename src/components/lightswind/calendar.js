@@ -4,8 +4,8 @@ import { DayPicker } from "react-day-picker";
 import "react-day-picker/dist/style.css";
 import { enUS } from "date-fns/locale";
 import { addDays } from "date-fns";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./select";
 // Import Select components from Lightswind UI
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, } from "lightswind";
 const Calendar = () => {
     const [mode, setMode] = useState("single");
     const today = new Date();

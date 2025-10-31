@@ -31,7 +31,7 @@ import FootballTurfBooking from "./pages/book-now/FootballTurfBooking";
 import Contact from "./pages/contact/Contact";
 import OurTurfs from "./pages/our-turfs/OurTurfs";
 const queryClient = new QueryClient();
-
+ 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route>

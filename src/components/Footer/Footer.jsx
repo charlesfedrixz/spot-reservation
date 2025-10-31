@@ -1,6 +1,7 @@
-import { FaFacebook, FaInstagram, FaTwitter } from "react-icons/fa";
+import { FaFacebook, FaInstagram } from "react-icons/fa";
 import { FiMail, FiMapPin, FiPhone } from "react-icons/fi";
 import logo from "../../../public/favicon/searchMyPlay.png";
+import { TwitterIcon } from "lucide-react";
 
 const Footer = () => {
   return (
@@ -19,7 +20,7 @@ const Footer = () => {
           </p>
           <div className="flex space-x-4">
             <FaFacebook className="text-xl text-gray-400 hover:text-white cursor-pointer" />
-            <FaTwitter className="text-xl text-gray-400 hover:text-white cursor-pointer" />
+            <TwitterIcon className="text-xl text-gray-400 hover:text-white cursor-pointer" />
             <FaInstagram className="text-xl text-gray-400 hover:text-white cursor-pointer" />
           </div>
         </div>

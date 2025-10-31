@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { FaRupeeSign } from "react-icons/fa";
@@ -6,17 +7,14 @@ import { Link } from "react-router-dom";
 
 export default function TurfCard({ turf, i }) {
   const [currentIndex, setCurrentIndex] = useState(0);
-
+  console.log(turf?.prices?.hourly)
   const nextSlide = () =>
     setCurrentIndex((prev) => (prev + 1) % turf.image.length);
 
   const prevSlide = () =>
     setCurrentIndex((prev) => (prev === 0 ? turf.image.length - 1 : prev - 1));
 
-  const imageUrl =
-    // turf?.image?.[currentIndex] && turf.image[currentIndex].length > 0
-    //   ? turf.image[currentIndex]
-    turf?.image?.length > 0
+  const imageUrl = turf?.image?.length > 0
       ? turf.image[currentIndex]
       : "https://images.unsplash.com/photo-1574629810360-7efbbe195018";
 

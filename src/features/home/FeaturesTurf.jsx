@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { motion } from "framer-motion";
 import { FiMapPin, FiStar } from "react-icons/fi";
 
@@ -10,9 +11,10 @@ const cardVariants = {
   }),
 };
 
+// eslint-disable-next-line react/prop-types
 export default function FeaturedTurfs({ turfs }) {
   return (
-    <section className="py-16 px-5 lg:px-20 bg-gray-50">
+    <section className="py-16 px-5 lg:px-20 ">
       <div className="max-w-6xl mx-auto">
         {/* Heading */}
         <motion.h2
