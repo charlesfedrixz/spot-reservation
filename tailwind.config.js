@@ -12,6 +12,9 @@ export default {
         serif: ["Merriweather", ...defaultTheme.fontFamily.serif],
         mono: ["FiraCode", ...defaultTheme.fontFamily.mono],
         custom: ["Poppins", "sans-serif"],
+        AttackOnCourier: ["AttackOnCourier", "monospace"],
+        monospace: ["ui-monospace", "monospace"],
+
       },
       fontSize: {
         xs: "0.75rem",

@@ -1,8 +1,10 @@
 import Loader from "@/components/common/Loader";
 import TurfCard from "@/components/ui/TurfCard";
 import { useFetchTurf } from "@/hooks/api/useFetchTurf";
+import useTittle from "@/hooks/useTittle";
 
 export default function OurTurfs() {
+  useTittle("Our Turfs"); 
   const { data: turfs, isLoading, isError } = useFetchTurf();
   if (isLoading)
     return (

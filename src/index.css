@@ -82,4 +82,6 @@
 @font-face {
   font-family: "Magillo";
   src: url("../public/magilio-font/MagilioRegular.ttf") format("truetype");
+  font-family: "AttackOnCourier";
+  src: url("../src/assets/fonts/attack-on-courier-font/AttackOnCourier-5nJz.ttf") format("truetype");
 }

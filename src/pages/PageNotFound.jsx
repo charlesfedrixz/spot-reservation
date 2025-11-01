@@ -1,6 +1,9 @@
+
+import useTittle from "@/hooks/useTittle";
 import { Link } from "react-router-dom";
 
 const PageNotFound = () => {
+  useTittle("404 Page Not Found");
   const isAdmin = window.location.pathname.includes("dashboard");
   const homeRoute = isAdmin ? "/dashboard" : -1;
 

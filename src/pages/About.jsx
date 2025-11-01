@@ -1,4 +1,7 @@
+import useTittle from "@/hooks/useTittle";
+
 export default function About() {
+  useTittle("About Us");
   return (
     <div className="min-h-screen ">
       <div className="container mx-auto px-4 py-16">
@@ -12,7 +15,7 @@ export default function About() {
               Our Mission
             </h2>
             <p className="text-gray-600 leading-relaxed mb-6">
-              We're dedicated to providing the most convenient and efficient
+              We&apos;re dedicated to providing the most convenient and efficient
               parking spot reservation system. Our platform helps users find and
               book parking spaces seamlessly, saving time and reducing stress.
             </p>

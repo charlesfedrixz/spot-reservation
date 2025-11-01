@@ -1,4 +1,5 @@
 import { getAllFootballTurfs } from "@/api/apiService";
+import useTittle from "@/hooks/useTittle";
 import { Axios } from "@/lib/axiosSetup";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -15,6 +16,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { useParams } from "react-router-dom";
 
 const FootballTurfBooking = () => {
+  useTittle("Football Turf Booking");
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedTimeSlot, setSelectedTimeSlot] = useState("");
   const [bookingStatus, setBookingStatus] = useState(null);

@@ -3,6 +3,7 @@ import FilterTurf from "@/features/home/FilterTurf";
 import HeroSection from "@/features/home/HeroSection";
 import HowItWorks from "@/features/home/HowItsWorks";
 import Testimonials from "@/features/home/Testimonials";
+import useTittle from "@/hooks/useTittle";
 import { useState } from "react";
 import { FiCalendar, FiClock } from "react-icons/fi";
 
@@ -53,7 +54,7 @@ const FootballTurfLanding = () => {
     "18:00 - 20:00",
     "20:00 - 22:00",
   ];
-
+  useTittle("Home");
   return (
     <div className="font-sans min-h-screen text-gray-800 "
     // style={{background: 'rgb(238,246,241)'}}

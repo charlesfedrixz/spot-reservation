@@ -1,8 +1,9 @@
+import useTittle from "@/hooks/useTittle";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 const LoginUser = () => {
-  const navigate = useNavigate();
+  useTittle("User Login");
+  // const navigate = useNavigate();
   const [formData, setFormData] = useState({
     number: "",
     password: "",

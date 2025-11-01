@@ -83,7 +83,7 @@ const getActiveTabFromPath = () => {
 const Logo = () => (
   <Link to="/" className="flex items-center gap-2 cursor-pointer">
     <img src={logo} alt="SearchMyPlay Logo" className="h-12 w-12" />
-    <div className="text-md md:text-xl font-bold text-gray-800">
+    <div className="text-md md:text-xl font-bold font-AttackOnCourier text-gray-800">
       Search<span className="text-green-600">MyPlay</span>
     </div>
   </Link>

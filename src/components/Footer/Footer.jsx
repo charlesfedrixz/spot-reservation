@@ -10,7 +10,7 @@ const Footer = () => {
         <div>
           <div className="flex items-center space-x-3 ">
             <img src={logo} alt="" className="w-12 h-12" />
-            <h3 className="text-2xl font-bold">
+            <h3 className="text-2xl font-bold font-AttackOnCourier">
               Search<span className="text-green-500">MyPlay</span>
             </h3>
           </div>
@@ -27,7 +27,7 @@ const Footer = () => {
         <div>
           <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
           <ul className="space-y-2">
-            <li className="text-gray-400 hover:text-white cursor-pointer">
+            <li className="te text-xt-gray-400 hover:text-white cursor-pointer">
               Home
             </li>
             <li className="text-gray-400 hover:text-white cursor-pointer">

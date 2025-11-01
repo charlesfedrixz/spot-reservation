@@ -1,11 +1,13 @@
 import { handleFilterByDataAndTime } from "@/api/apiService";
 import {Calendar} from "@/components/ui/calendar";
+import useTittle from "@/hooks/useTittle";
 import { useMutation } from "@tanstack/react-query";
 import { isAfter } from "date-fns";
 import { Clock, Filter } from "lucide-react";
 import React, { useMemo, useState } from "react";
 
 export default function FilterTurf() {
+  useTittle("Filter Turfs");
   const [slotStart, setSlotStart] = useState("");
   const [slotEnd, setSlotEnd] = React.useState("");
   const [selectedDate, setSelectedDate] = useState(null);

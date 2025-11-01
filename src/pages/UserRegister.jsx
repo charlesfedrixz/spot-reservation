@@ -1,7 +1,9 @@
 import { useState } from "react";
 import logo from "../../public/favicon/searchMyPlay.png";
+import useTittle from "@/hooks/useTittle";
 
 const UserRegister = () => {
+  useTittle("User Registration");
   const [formData, setFormData] = useState({
     number: "",
     email: "",
